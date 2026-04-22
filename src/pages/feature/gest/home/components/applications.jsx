@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography, Container, Fade, Button } from '@mui/material';
 import img from 'assets/images/test.png';
 import EpisodeSwiper from '../../../../../components/EpisodeSwiper';
-
-export default function Episodes({ shouldAnimate = false }) {
+// import imgbg from 'assets/images/test2.png';
+export default function Applications({ shouldAnimate = false }) {
   const [checked, setChecked] = useState(false);
 
   useEffect(() => {
@@ -13,26 +13,36 @@ export default function Episodes({ shouldAnimate = false }) {
   }, [shouldAnimate]);
 
   const episodes = [
-    { id: 1, title: 'عنوان الحلقة', image: img, watch: 'شاهد' },
-    { id: 2, title: 'عنوان الحلقة', image: img, watch: 'شاهد' },
-    { id: 3, title: 'عنوان الحلقة', image: img, watch: 'شاهد' },
-    { id: 4, title: 'عنوان الحلقة', image: img, watch: 'شاهد' },
-    { id: 5, title: 'عنوان الحلقة', image: img, watch: 'شاهد' }
+    { id: 1, title: 'عنوان النطبيق', image: img },
+    { id: 2, title: 'عنوان التطبيق', image: img },
+    { id: 3, title: 'عنوان التطبيق', image: img },
+    { id: 4, title: 'عنوان التطبيق', image: img },
+    { id: 5, title: 'عنوان التطبيق', image: img }
   ];
 
   return (
     <Fade in={checked} timeout={800}>
-      <Box sx={{ py: 4, width: '100%' }}>
+      <Box
+        sx={{
+          py: 4,
+          width: '100%',
+          backgroundColor: '#aeedd9'
+          // backgroundImage: `url(${imgbg})`,
+          //   backgroundSize: 'cover',
+          //   backgroundPosition: 'center'
+        }}
+      >
         <Container maxWidth="lg">
           {/* Title Section */}
           <Box sx={{ mb: 4, textAlign: 'center' }}>
-            <Typography variant="h1" sx={{ fontWeight: 700, color: 'text.primary', mb: 1 }}>
-              الحلقات
+            <Typography variant="h1" sx={{ fontWeight: 700, color: 'black', mb: 1 }}>
+              التطبيقات
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '18px' }}>
               حلقات متخصصة لأولياء الأمور والمعلمين والآباء والأمهات
             </Typography>
           </Box>
+
           {/* Episodes Swiper */}
           <EpisodeSwiper episodes={episodes} isAnimating={checked} />
 
@@ -45,6 +55,7 @@ export default function Episodes({ shouldAnimate = false }) {
               '&:hover': { '& .view-all-text': { color: '#006699' } }
             }}
           >
+ 
             <Button
               variant="contained"
               sx={{

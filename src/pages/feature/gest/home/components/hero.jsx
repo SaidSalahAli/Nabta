@@ -11,7 +11,13 @@ export default function Hero({ shouldAnimate = false }) {
   const theme = useTheme();
   const [checked, setChecked] = useState(false);
 
-  const heroSlides = [img, img, img, img, img];
+  const heroSlides = [
+    img,
+    img,
+    img,
+    img,
+    img
+  ];
 
   useEffect(() => {
     if (shouldAnimate) setChecked(true);
@@ -62,7 +68,7 @@ export default function Hero({ shouldAnimate = false }) {
               <Box
                 sx={{
                   width: '100%',
-                  height: { xs: '250px', sm: '350px', md: '550px' },
+                  height: { xs: '250px', sm: '350px', md: '500px' },
                   backgroundImage: `url(${slide})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
