@@ -25,8 +25,8 @@ export default function Applications({ shouldAnimate = false }) {
       <Box
         sx={{
           py: 4,
-          width: '100%',
-          backgroundColor: '#aeedd9'
+          width: '100%'
+          // backgroundColor: '#aeedd9'
           // backgroundImage: `url(${imgbg})`,
           //   backgroundSize: 'cover',
           //   backgroundPosition: 'center'
@@ -55,7 +55,6 @@ export default function Applications({ shouldAnimate = false }) {
               '&:hover': { '& .view-all-text': { color: '#006699' } }
             }}
           >
- 
             <Button
               variant="contained"
               sx={{

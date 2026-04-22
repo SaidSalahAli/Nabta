@@ -16,14 +16,16 @@ export default function Characters({ shouldAnimate = false }) {
       id: 1,
       name: 'مسلم',
       image: character_1,
-      description: 'المسلم يرتدي الثوب والغترة ويتحدث عن الديانة الإسلامية والمعايير والقيم الأخلاقية والعروق الشرقية بحرية',
+      description:
+        'الطفل مُسلم هو طفل ذكي ومُحب للاستكشاف والتعلم لكل جديد ومفيد، ويحافظ على الصلاة في أوقاتها، ويعتني بصحته ويمارس الرياضة وله مواقف ملهمة أثناء تعلمه الحروف العربية.',
       reverse: false
     },
     {
       id: 2,
       name: 'مسلمة',
       image: character_2,
-      description: 'الفتاة تتحدث عن الحقوق والحرية والعمل والدراسة والاستقلالية والعروق والجذور العربية بحرية',
+      description:
+        'الطفلة مُسلمة هي طفلة جميلة ومهذبة وتحب الجلوس بالبيت والاعتناء به، تتعلم من أمها أشياء كثيرة مثل ترتيب المنزل وتحضير الطعام ومع ذلك هي مجتهدة في دراستها ومذاكرتها، ولها مواقف رائعة مع أخوها مُسلم أثناء تعلمها معه الحروف العربية.',
       reverse: true
     }
   ];
@@ -33,11 +35,11 @@ export default function Characters({ shouldAnimate = false }) {
       <Box
         sx={{
           py: 6,
-          width: '100%'
+          width: '100%',
+          backgroundColor: '#ffd6003b'
         }}
       >
         <Container maxWidth="lg">
-          {/* Title */}
           <Typography
             variant="h1"
             sx={{
@@ -48,17 +50,32 @@ export default function Characters({ shouldAnimate = false }) {
           >
             شخصيات نبتة
           </Typography>
-          {/* Characters */}
-          <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 5 }}>
+
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: { xs: 'column', md: 'row' },
+              gap: 5,
+              alignItems: 'stretch'
+            }}
+          >
             {characters.map((character, index) => (
-              <Fade key={character.id} in={checked} timeout={800} style={{ transitionDelay: checked ? `${index * 200}ms` : '0ms' }}>
+              <Fade
+                key={character.id}
+                in={checked}
+                timeout={800}
+                style={{ transitionDelay: checked ? `${index * 200}ms` : '0ms' }}
+              >
                 <Box
                   sx={{
+                    flex: 1,
                     display: 'flex',
-                    flexDirection: character.reverse ? { xs: 'column', md: 'row-reverse' } : { xs: 'column', md: 'row' },
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    gap: 2
+                    flexDirection: character.reverse
+                      ? { xs: 'column', md: 'row-reverse' }
+                      : { xs: 'column', md: 'row' },
+                    alignItems: 'stretch',
+                    gap: 2,
+                    minWidth: 0
                   }}
                 >
                   {/* Image */}
@@ -67,15 +84,33 @@ export default function Characters({ shouldAnimate = false }) {
                       flexShrink: 0,
                       display: 'flex',
                       justifyContent: 'center',
+                      alignItems: 'center',
                       transition: 'transform 0.3s ease',
                       '&:hover': { transform: 'scale(1.05)' }
                     }}
                   >
-                    <Box component="img" src={character.image} alt={character.name} sx={{ maxHeight: '220px', objectFit: 'contain' }} />
+                    <Box
+                      component="img"
+                      src={character.image}
+                      alt={character.name}
+                      sx={{
+                        maxHeight: '250px',
+                        width: '100%',
+                        maxWidth: { xs: '220px', md: '250px' },
+                        objectFit: 'contain'
+                      }}
+                    />
                   </Box>
 
                   {/* Text Box with Name Badge */}
-                  <Box sx={{ flex: 1, position: 'relative', pt: 2 }}>
+                  <Box
+                    sx={{
+                      flex: 1,
+                      position: 'relative',
+                      pt: 2,
+                      display: 'flex'
+                    }}
+                  >
                     {/* Name badge */}
                     <Box
                       sx={{
@@ -91,7 +126,15 @@ export default function Characters({ shouldAnimate = false }) {
                         py: 0.5
                       }}
                     >
-                      <Typography sx={{ fontWeight: 700, fontSize: '15px', color: '#0088CC' }}>{character.name}</Typography>
+                      <Typography
+                        sx={{
+                          fontWeight: 700,
+                          fontSize: '20px',
+                          color: '#0088CC'
+                        }}
+                      >
+                        {character.name}
+                      </Typography>
                     </Box>
 
                     {/* Description box */}
@@ -103,6 +146,9 @@ export default function Characters({ shouldAnimate = false }) {
                         p: 3,
                         pt: 4,
                         mt: 1.5,
+                        flex: 1,
+                        display: 'flex',
+                        alignItems: 'center',
                         transition: 'all 0.3s ease',
                         '&:hover': {
                           boxShadow: '0 8px 24px rgba(0, 136, 204, 0.15)',
@@ -115,7 +161,7 @@ export default function Characters({ shouldAnimate = false }) {
                         sx={{
                           color: 'text.secondary',
                           lineHeight: 1.9,
-                          fontSize: '16px',
+                          fontSize: '18px',
                           textAlign: 'right'
                         }}
                       >

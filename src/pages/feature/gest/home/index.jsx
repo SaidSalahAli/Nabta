@@ -1,12 +1,13 @@
 import { Box, Container } from '@mui/material';
 import React from 'react';
 import Hero from './components/hero';
-import Episodes from './components/Episodes';
 import Applications from './components/applications';
 import Characters from './components/characters';
-import Worksheets from './components/Worksheets';
+import Worksheets from './components/work-sheets';
+import WhyNabta from './components/why-nabta';
 import imgbg from 'assets/images/test2.png';
-import AboutNabta from './components/aboutNabta';
+import AboutNabta from './components/about-nabta';
+import Episodes from './components/Episodes';
 
 export default function Home() {
   return (
@@ -14,8 +15,9 @@ export default function Home() {
       <Hero shouldAnimate={true} />
       <Episodes shouldAnimate={true} />
       <Characters shouldAnimate={true} />
-      <Applications shouldAnimate={true} />
       <Worksheets shouldAnimate={true} />
+      <WhyNabta shouldAnimate={true} />
+      <Applications shouldAnimate={true} />
       <AboutNabta shouldAnimate={true} />
     </Box>
   );
