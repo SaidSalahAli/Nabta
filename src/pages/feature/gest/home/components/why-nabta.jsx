@@ -13,37 +13,40 @@ export default function WhyNabta({ shouldAnimate = false }) {
   const reasons = [
     {
       id: 1,
-      title: 'المعلم',
-      description: 'الاستناد إلى أحدث الأبحاث والدراسات في التربية والتعليم.',
-      icon: '👨‍🏫'
+      title: 'العلم',
+      description: 'الاستناد إلى أحدث الأبحاث والدراسات في التربية والتعليم.'
     },
     {
       id: 2,
       title: 'العمل',
-      description: 'تجارب عملية وواقعية وتطبيقية وفعّالة.',
-      icon: '💼'
+      description: 'تجارب عملية واقعية، ونتائج مجرّبة ومؤثرة.'
     },
     {
       id: 3,
       title: 'الخبرة',
-      description: 'فهم احتياجات الأطفال وأولياء الأمور والمعلمين.',
-      icon: '🎓'
+      description: 'فهم احتياجات الأطفال وأولياء الأمور والمعلمين.'
     }
   ];
 
   return (
     <Fade in={checked} timeout={800}>
-      <Box sx={{ py: 8, width: '100%', backgroundColor: '#f8f9fa' }}>
+      <Box
+        sx={{
+          py: { xs: 6, md: 8 },
+          width: '100%',
+          backgroundColor: '#f8f9fa'
+        }}
+      >
         <Container maxWidth="lg">
           {/* Title Section */}
-          <Box sx={{ mb: 8, textAlign: 'center' }}>
+          <Box sx={{ mb: { xs: 5, md: 8 }, textAlign: 'center' }}>
             <Typography
               variant="h1"
               sx={{
                 fontWeight: 800,
                 color: 'text.primary',
                 mb: 3,
-                fontSize: { xs: '32px', sm: '40px', md: '30px' }
+                fontSize: { xs: '30px', sm: '36px', md: '42px' }
               }}
             >
               لماذا تختار نبتة؟
@@ -51,75 +54,76 @@ export default function WhyNabta({ shouldAnimate = false }) {
           </Box>
 
           {/* Reasons Grid */}
-          <Grid container spacing={4}>
+          <Grid
+            container
+            spacing={{ xs: 3, md: 0 }}
+            sx={{
+              alignItems: 'stretch'
+            }}
+          >
             {reasons.map((reason, index) => (
-              <Grid item xs={12} sm={6} md={4} key={reason.id}>
+              <Grid
+                item
+                xs={12}
+                md={4}
+                key={reason.id}
+                sx={{
+                  position: 'relative',
+                  display: 'flex',
+
+                  ...(index !== reasons.length - 1 && {
+                    '&::after': {
+                      content: '""',
+                      position: 'absolute',
+                      top: '18%',
+                      right: 0,
+                      transform: 'translateX(-50%)',
+                      height: '64%',
+                      width: '1px',
+                      backgroundColor: '#d6d6d6',
+                      display: { xs: 'none', md: 'block' }
+                    }
+                  })
+                }}
+              >
                 <Fade in={checked} timeout={800} style={{ transitionDelay: checked ? `${index * 150}ms` : '0ms' }}>
                   <Card
                     sx={{
-                      borderRadius: '16px',
-                      overflow: 'hidden',
-                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
+                      width: '100%',
+                      borderRadius: 0,
+                      overflow: 'visible',
+                      boxShadow: 'none',
                       transition: 'all 0.3s ease',
-                      cursor: 'pointer',
-                      height: '100%',
+                      cursor: 'default',
+                      minHeight: { xs: 'auto', md: 260 },
                       display: 'flex',
                       flexDirection: 'column',
-                      backgroundColor: '#fff',
-                      border: '2px solid transparent',
-                      position: 'relative',
-                      '&:hover': {
-                        boxShadow: '0 12px 32px rgba(0, 136, 204, 0.15)',
-                        transform: 'translateY(-8px)',
-                        borderColor: '#0088CC'
-                      }
+                      justifyContent: 'center',
+                      backgroundColor: 'transparent',
+                      position: 'relative'
                     }}
                   >
-                    {/* Top Border Line */}
-                    <Box
-                      sx={{
-                        height: '4px',
-                        background: 'linear-gradient(90deg, #0088CC 0%, #00AA99 100%)',
-                        transition: 'all 0.3s ease'
-                      }}
-                    />
-
                     <CardContent
                       sx={{
                         flex: 1,
                         display: 'flex',
                         flexDirection: 'column',
-                        justifyContent: 'center',
+                        justifyContent: 'flex-start',
                         alignItems: 'center',
                         textAlign: 'center',
-                        gap: 2.5,
-                        p: 4
+                        gap: 2,
+                        px: { xs: 2, sm: 4, md: 5 },
+                        py: { xs: 2, md: 3 }
                       }}
                     >
-                      {/* Icon */}
-                      <Box
-                        sx={{
-                          fontSize: '56px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          width: '80px',
-                          height: '80px',
-                          backgroundColor: '#E8F4FF',
-                          borderRadius: '12px',
-                          transition: 'all 0.3s ease'
-                        }}
-                      >
-                        {reason.icon}
-                      </Box>
-
                       {/* Title */}
                       <Typography
                         variant="h5"
                         sx={{
                           fontWeight: 700,
-                          color: '#0088CC',
-                          fontSize: '24px'
+                          color: '#4a4a4a',
+                          fontSize: { xs: '28px', md: '36px' },
+                          mb: 1
                         }}
                       >
                         {reason.title}
@@ -127,12 +131,13 @@ export default function WhyNabta({ shouldAnimate = false }) {
 
                       {/* Description */}
                       <Typography
-                        variant="body2"
+                        variant="body1"
                         sx={{
-                          color: 'text.secondary',
-                          fontSize: '16px',
-                          lineHeight: 1.8,
-                          fontWeight: 500
+                          color: '#5f5f5f',
+                          fontSize: { xs: '17px', md: '22px' },
+                          lineHeight: 1.9,
+                          fontWeight: 400,
+                          maxWidth: '290px'
                         }}
                       >
                         {reason.description}
@@ -143,17 +148,6 @@ export default function WhyNabta({ shouldAnimate = false }) {
               </Grid>
             ))}
           </Grid>
-
-          {/* Bottom decoration line */}
-          <Box
-            sx={{
-              mt: 8,
-              height: '2px',
-              background: 'linear-gradient(90deg, transparent 0%, #0088CC 50%, transparent 100%)',
-              maxWidth: '400px',
-              mx: 'auto'
-            }}
-          />
         </Container>
       </Box>
     </Fade>

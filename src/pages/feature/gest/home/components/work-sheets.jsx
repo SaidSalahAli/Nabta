@@ -14,37 +14,9 @@ export default function Worksheets({ shouldAnimate = false }) {
         sx={{
           py: { xs: 7, md: 10 },
           position: 'relative',
-          overflow: 'hidden',
-          background: 'linear-gradient(180deg, #fffdf8 0%, #fffaf1 45%, #fffdf8 100%)'
+          overflow: 'hidden'
         }}
       >
-        {/* simple background shapes */}
-        <Box
-          sx={{
-            position: 'absolute',
-            top: 50,
-            left: { xs: -30, md: 40 },
-            width: 120,
-            height: 120,
-            borderRadius: '50%',
-            backgroundColor: 'rgba(255, 214, 102, 0.18)',
-            filter: 'blur(6px)'
-          }}
-        />
-        <Box
-          sx={{
-            position: 'absolute',
-            bottom: 40,
-            right: { xs: -20, md: 60 },
-            width: 150,
-            height: 150,
-            borderRadius: '30px',
-            backgroundColor: 'rgba(163, 220, 255, 0.18)',
-            transform: 'rotate(18deg)',
-            filter: 'blur(4px)'
-          }}
-        />
-
         <Container maxWidth="lg">
           <Box
             sx={{
@@ -55,7 +27,7 @@ export default function Worksheets({ shouldAnimate = false }) {
             }}
           >
             {/* LEFT CONTENT */}
-            <Box sx={{ textAlign: { xs: 'center', md: 'right' } }}>
+            <Box sx={{ textAlign: { xs: 'center', md: 'start' } }}>
               <Typography
                 sx={{
                   fontSize: { xs: '34px', md: '52px' },
@@ -137,7 +109,7 @@ export default function Worksheets({ shouldAnimate = false }) {
                   height: { xs: 260, sm: 320, md: 360 }
                 }}
               >
-                {/* papers الخلفية */}
+                {/* papers  */}
                 <Box
                   sx={{
                     position: 'absolute',
@@ -237,30 +209,6 @@ export default function Worksheets({ shouldAnimate = false }) {
                     borderTopRightRadius: '10px'
                   }}
                 />
-
-                {/* small label */}
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    bottom: 0,
-                    right: 0,
-                    px: 2,
-                    py: 1,
-                    borderRadius: '14px',
-                    backgroundColor: '#fff',
-                    border: '2px dashed #3B354A'
-                  }}
-                >
-                  <Typography
-                    sx={{
-                      fontSize: '14px',
-                      fontWeight: 700,
-                      color: '#3B354A'
-                    }}
-                  >
-                    صورة توضيحية
-                  </Typography>
-                </Box>
               </Box>
             </Box>
           </Box>

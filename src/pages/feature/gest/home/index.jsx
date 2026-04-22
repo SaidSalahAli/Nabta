@@ -1,13 +1,17 @@
-import { Box, Container } from '@mui/material';
+import { Box } from '@mui/material';
 import React from 'react';
 import Hero from './components/hero';
 import Applications from './components/applications';
 import Characters from './components/characters';
 import Worksheets from './components/work-sheets';
 import WhyNabta from './components/why-nabta';
-import imgbg from 'assets/images/test2.png';
 import AboutNabta from './components/about-nabta';
 import Episodes from './components/Episodes';
+// import Partners from './components/partners';
+import NabtaNumbers from './components/nabta-numbers';
+import PartnersReviews from './components/partners-reviews';
+import Partners from './components/partners';
+import Team from './components/team';
 
 export default function Home() {
   return (
@@ -17,8 +21,12 @@ export default function Home() {
       <Characters shouldAnimate={true} />
       <Worksheets shouldAnimate={true} />
       <WhyNabta shouldAnimate={true} />
+      <NabtaNumbers shouldAnimate={true} />
       <Applications shouldAnimate={true} />
       <AboutNabta shouldAnimate={true} />
+      <PartnersReviews shouldAnimate={true} />
+      <Partners shouldAnimate={true} />
+      <Team shouldAnimate={true} />
     </Box>
   );
 }
