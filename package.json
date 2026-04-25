@@ -23,6 +23,7 @@
     "iconsax-react": "0.0.8",
     "jwt-decode": "4.0.0",
     "lodash-es": "4.17.21",
+    "lottie-react": "^2.4.1",
     "react": "18.3.1",
     "react-device-detect": "2.2.3",
     "react-dom": "18.3.1",

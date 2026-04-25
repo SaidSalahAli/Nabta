@@ -236,5 +236,5 @@ export default function Team({ shouldAnimate = false }) {
         </Container>
       </Box>
     </Fade>
-  );
+  ); 
 }

@@ -51,12 +51,16 @@ export const JWTProvider = ({ children }) => {
 
   useEffect(() => {
     const init = async () => {
+      const minDisplay = 1000; // minimum loader display time in ms
+      const start = Date.now();
       try {
         const serviceToken = window.localStorage.getItem('serviceToken');
         if (serviceToken && verifyToken(serviceToken)) {
           setSession(serviceToken);
           const response = await axios.get('/api/account/me');
           const { user } = response.data;
+          const elapsed = Date.now() - start;
+          if (elapsed < minDisplay) await new Promise((r) => setTimeout(r, minDisplay - elapsed));
           dispatch({
             type: LOGIN,
             payload: {
@@ -65,12 +69,16 @@ export const JWTProvider = ({ children }) => {
             }
           });
         } else {
+          const elapsed = Date.now() - start;
+          if (elapsed < minDisplay) await new Promise((r) => setTimeout(r, minDisplay - elapsed));
           dispatch({
             type: LOGOUT
           });
         }
       } catch (err) {
         console.error(err);
+        const elapsed = Date.now() - start;
+        if (elapsed < minDisplay) await new Promise((r) => setTimeout(r, minDisplay - elapsed));
         dispatch({
           type: LOGOUT
         });

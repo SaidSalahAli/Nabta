@@ -8,6 +8,7 @@ import Locales from 'components/Locales';
 import RTLLayout from 'components/RTLLayout';
 import ScrollTop from 'components/ScrollTop';
 import Snackbar from 'components/@extended/Snackbar';
+import logoAnimation from 'assets/images/logoAnimation.json';
 
 // auth-provider
 import { JWTProvider as AuthProvider } from 'contexts/JWTContext';

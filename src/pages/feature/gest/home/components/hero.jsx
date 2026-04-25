@@ -5,19 +5,15 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import { Pagination, Navigation, Autoplay } from 'swiper/modules';
-import img from 'assets/images/test.png';
+import slider1 from 'assets/Home/slider_1.svg';
+import slider2 from 'assets/Home/slider_2.svg';
+import slider3 from 'assets/Home/slider_3.svg';
 
 export default function Hero({ shouldAnimate = false }) {
   const theme = useTheme();
   const [checked, setChecked] = useState(false);
 
-  const heroSlides = [
-    img,
-    img,
-    img,
-    img,
-    img
-  ];
+  const heroSlides = [slider1, slider2, slider3];
 
   useEffect(() => {
     if (shouldAnimate) setChecked(true);
@@ -68,10 +64,11 @@ export default function Hero({ shouldAnimate = false }) {
               <Box
                 sx={{
                   width: '100%',
-                  height: { xs: '250px', sm: '350px', md: '500px' },
+                  height: { xs: '250px', sm: '350px', md: '800px' },
                   backgroundImage: `url(${slide})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
+
                   position: 'relative'
                 }}
               >
