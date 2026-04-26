@@ -16,6 +16,7 @@ import Tabs from '@mui/material/Tabs';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
 
 // project-imports
 import ProfileTab from './ProfileTab';
@@ -151,9 +152,11 @@ export default function ProfilePage() {
                         <Stack direction="row" sx={{ gap: 1.25, alignItems: 'center' }}>
                           <Avatar alt="profile user" src={avatar1} />
                           <Stack>
-                            <Typography variant="subtitle1">{user?.name}</Typography>
+                            <Typography variant="subtitle1">
+                              {user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : user?.email}
+                            </Typography>
                             <Typography variant="body2" color="secondary">
-                              UI/UX Designer
+                              {user?.email}
                             </Typography>
                           </Stack>
                         </Stack>
@@ -167,8 +170,39 @@ export default function ProfilePage() {
                       </Grid>
                     </Grid>
                   </CardContent>
-
                   <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                    <CardContent sx={{ px: 2.5, py: 1.5 }}>
+                      <Stack sx={{ gap: 1 }}>
+                        <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
+                          <Typography variant="body2" color="secondary">
+                            ID:
+                          </Typography>
+                          <Typography variant="subtitle2">{user?.id}</Typography>
+                        </Stack>
+                        <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
+                          <Typography variant="body2" color="secondary">
+                            Email:
+                          </Typography>
+                          <Typography variant="subtitle2">{user?.email}</Typography>
+                        </Stack>
+                        {user?.firstName && (
+                          <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
+                            <Typography variant="body2" color="secondary">
+                              First Name:
+                            </Typography>
+                            <Typography variant="subtitle2">{user.firstName}</Typography>
+                          </Stack>
+                        )}
+                        {user?.lastName && (
+                          <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
+                            <Typography variant="body2" color="secondary">
+                              Last Name:
+                            </Typography>
+                            <Typography variant="subtitle2">{user.lastName}</Typography>
+                          </Stack>
+                        )}
+                      </Stack>
+                    </CardContent>
                     <Tabs variant="fullWidth" value={value} onChange={handleChange} aria-label="profile tabs">
                       <Tab sx={tabStyle} icon={<Profile size={18} style={{ marginBottom: 0 }} />} label="Profile" {...a11yProps(0)} />
                       <Tab sx={tabStyle} icon={<Setting2 size={18} style={{ marginBottom: 0 }} />} label="Setting" {...a11yProps(1)} />

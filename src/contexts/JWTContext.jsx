@@ -22,13 +22,8 @@ const initialState = {
 };
 
 const verifyToken = (serviceToken) => {
-  if (!serviceToken) {
-    return false;
-  }
+  if (!serviceToken) return false;
   const decoded = jwtDecode(serviceToken);
-  /**
-   * Property 'exp' does not exist on type '<T = unknown>(token: string, options?: JwtDecodeOptions | undefined) => T'.
-   */
   return decoded.exp > Date.now() / 1000;
 };
 
@@ -42,6 +37,21 @@ const setSession = (serviceToken) => {
   }
 };
 
+// استخرج بيانات المستخدم من الـ token مباشرة
+const getUserFromToken = (token) => {
+  try {
+    const decoded = jwtDecode(token);
+    return {
+      id: decoded.UserId,
+      email: decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'] || decoded.email || '',
+      firstName: decoded.firstName || '',
+      lastName: decoded.lastName || ''
+    };
+  } catch {
+    return null;
+  }
+};
+
 // ==============================|| JWT CONTEXT & PROVIDER ||============================== //
 
 const JWTContext = createContext(null);
@@ -51,37 +61,33 @@ export const JWTProvider = ({ children }) => {
 
   useEffect(() => {
     const init = async () => {
-      const minDisplay = 1000; // minimum loader display time in ms
+      const minDisplay = 1000;
       const start = Date.now();
       try {
-        const serviceToken = window.localStorage.getItem('serviceToken');
+        const serviceToken = localStorage.getItem('serviceToken');
+
         if (serviceToken && verifyToken(serviceToken)) {
           setSession(serviceToken);
-          const response = await axios.get('/api/account/me');
-          const { user } = response.data;
+
+          const user = getUserFromToken(serviceToken);
+
           const elapsed = Date.now() - start;
           if (elapsed < minDisplay) await new Promise((r) => setTimeout(r, minDisplay - elapsed));
+
           dispatch({
             type: LOGIN,
-            payload: {
-              isLoggedIn: true,
-              user
-            }
+            payload: { isLoggedIn: true, user }
           });
         } else {
           const elapsed = Date.now() - start;
           if (elapsed < minDisplay) await new Promise((r) => setTimeout(r, minDisplay - elapsed));
-          dispatch({
-            type: LOGOUT
-          });
+          dispatch({ type: LOGOUT });
         }
       } catch (err) {
         console.error(err);
         const elapsed = Date.now() - start;
         if (elapsed < minDisplay) await new Promise((r) => setTimeout(r, minDisplay - elapsed));
-        dispatch({
-          type: LOGOUT
-        });
+        dispatch({ type: LOGOUT });
       }
     };
 
@@ -89,44 +95,31 @@ export const JWTProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    const response = await axios.post('/api/account/login', { email, password });
-    const { serviceToken, user } = response.data;
-    setSession(serviceToken);
+    const response = await axios.post('api/AccountNabta/Login', { email, password });
+    const { accessToken, user } = response.data;
+    setSession(accessToken);
     dispatch({
       type: LOGIN,
-      payload: {
-        isLoggedIn: true,
-        user
-      }
+      payload: { isLoggedIn: true, user }
     });
   };
 
-  const register = async (email, password, firstName, lastName) => {
-    // todo: this flow need to be recode as it not verified
-    const id = chance.bb_pin();
-    const response = await axios.post('/api/account/register', {
-      id,
+  const register = async (email, password, firstName, lastName, mobile) => {
+    const payload = {
       email,
       password,
       firstName,
-      lastName
-    });
-    let users = response.data;
+      lastName,
+      mobail: mobile || ''
+    };
 
-    if (window.localStorage.getItem('users') !== undefined && window.localStorage.getItem('users') !== null) {
-      const localUsers = window.localStorage.getItem('users');
-      users = [
-        ...JSON.parse(localUsers),
-        {
-          id,
-          email,
-          password,
-          name: `${firstName} ${lastName}`
-        }
-      ];
-    }
+    const response = await axios.post('api/AccountNabta/Register', payload);
 
-    window.localStorage.setItem('users', JSON.stringify(users));
+    const data = response.data || response;
+    const serviceToken = data.accessToken || data.serviceToken || data.token;
+    if (serviceToken) setSession(serviceToken);
+
+    return data;
   };
 
   const logout = () => {

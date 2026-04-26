@@ -64,7 +64,7 @@ export default function Hero({ shouldAnimate = false }) {
               <Box
                 sx={{
                   width: '100%',
-                  height: { xs: '250px', sm: '350px', md: '800px' },
+                  height: { xs: '250px', sm: '350px', md: '700px' },
                   backgroundImage: `url(${slide})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',

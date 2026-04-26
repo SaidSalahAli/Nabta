@@ -13,7 +13,15 @@ export default defineConfig(({ mode }) => {
       open: true,
       // this sets a default port to 3000
       port: PORT,
-      host: true
+      host: true,
+      // Proxy API requests to backend in development
+      proxy: {
+        '/api': {
+          target: 'https://admin.nabtastudio.com',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, '/api')
+        }
+      }
     },
     preview: {
       open: true,

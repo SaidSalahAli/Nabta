@@ -3,6 +3,7 @@ import { useTheme } from '@mui/material/styles';
 
 // material-ui
 import AppBar from '@mui/material/AppBar';
+import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -11,16 +12,23 @@ import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+
 // assets
 import GooglePlay from 'assets/Home/google-play-badge-logo-svgrepo-com.png';
 import Logo from 'components/logo';
 
-import { HambergerMenu, CloseCircle } from 'iconsax-react';
+import { HambergerMenu } from 'iconsax-react';
+import { Link } from 'react-router';
+
+// auth
+import useAuth from 'hooks/useAuth';
 
 // ==============================|| HEADER - TOP BAR ||============================== //
 
@@ -42,7 +50,6 @@ function TopBar({ primaryColor, onClose, isVisible }) {
         position: 'relative'
       }}
     >
-      {/* Close Button */}
       <IconButton
         size="small"
         onClick={onClose}
@@ -58,7 +65,6 @@ function TopBar({ primaryColor, onClose, isVisible }) {
         X
       </IconButton>
 
-      {/* Center: Announcement Text */}
       <Box sx={{ textAlign: 'center', flex: 1, minWidth: 0 }}>
         <Typography sx={{ fontWeight: 600, fontSize: { xs: 13, md: 20 }, color: 'text.primary', lineHeight: 1.3 }}>
           تم إطلاق تطبيق لغتي العربية
@@ -68,11 +74,73 @@ function TopBar({ primaryColor, onClose, isVisible }) {
         </Typography>
       </Box>
 
-      {/* Google Play Image */}
       <Box sx={{ flexShrink: 0 }}>
         <img src={GooglePlay} alt="Google Play" style={{ height: '35px', width: 'auto' }} />
       </Box>
     </Box>
+  );
+}
+
+// ==============================|| USER MENU ||============================== //
+
+function UserMenu({ user, primaryColor, onLogout }) {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+
+  const initials = `${user?.firstName?.[0] || ''}${user?.lastName?.[0] || ''}`.toUpperCase();
+
+  return (
+    <>
+      <IconButton onClick={(e) => setAnchorEl(e.currentTarget)} sx={{ p: 0 }}>
+        <Avatar
+          sx={{
+            width: 34,
+            height: 34,
+            bgcolor: primaryColor,
+            fontSize: 13,
+            fontWeight: 700,
+            cursor: 'pointer'
+          }}
+        >
+          {initials}
+        </Avatar>
+      </IconButton>
+
+      <Menu
+        anchorEl={anchorEl}
+        open={open}
+        onClose={() => setAnchorEl(null)}
+        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        slotProps={{
+          paper: {
+            sx: { mt: 1, minWidth: 180, borderRadius: 2, boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }
+          }
+        }}
+      >
+        {/* User Info */}
+        <Box sx={{ px: 2, py: 1.5, borderBottom: '1px solid', borderColor: 'divider' }}>
+          <Typography sx={{ fontWeight: 700, fontSize: 14, color: 'text.primary' }}>
+            {user?.firstName} {user?.lastName}
+          </Typography>
+          <Typography sx={{ fontSize: 12, color: 'text.secondary', mt: 0.25 }}>{user?.email}</Typography>
+        </Box>
+
+        <MenuItem onClick={() => setAnchorEl(null)} component={Link} to="/profile" sx={{ fontSize: 14, py: 1.25 }}>
+          الملف الشخصي
+        </MenuItem>
+
+        <MenuItem
+          onClick={() => {
+            setAnchorEl(null);
+            onLogout();
+          }}
+          sx={{ fontSize: 14, py: 1.25, color: 'error.main' }}
+        >
+          تسجيل الخروج
+        </MenuItem>
+      </Menu>
+    </>
   );
 }
 
@@ -82,6 +150,7 @@ const navLinks = ['الصفحة الرئسية', 'حلقات', 'تطبيقات',
 
 function BottomBar({ primaryColor }) {
   const [activeTab, setActiveTab] = useState(0);
+  const { isLoggedIn, user, logout } = useAuth();
 
   return (
     <Box
@@ -102,7 +171,6 @@ function BottomBar({ primaryColor }) {
         <Logo to="/" width={90} />
       </Box>
 
-      {/* Nav Tabs */}
       <Tabs
         value={activeTab}
         onChange={(_, val) => setActiveTab(val)}
@@ -130,8 +198,8 @@ function BottomBar({ primaryColor }) {
         ))}
       </Tabs>
 
-      {/* Action Buttons - Hidden on Mobile */}
-      <Stack direction="row" alignItems="center" gap={1} sx={{ display: { xs: 'none', md: 'flex' } }}>
+      {/* Action Buttons */}
+      <Stack direction="row" alignItems="center" gap={1} sx={{ display: { xs: 'none', md: 'flex' }, flexShrink: 0 }}>
         {['المتجر', 'ادعمنا'].map((label) => (
           <Button
             key={label}
@@ -154,38 +222,50 @@ function BottomBar({ primaryColor }) {
 
         <Box sx={{ width: '0.5px', height: 20, bgcolor: 'divider', mx: 0.5 }} />
 
-        <Button
-          variant="text"
-          sx={{
-            fontSize: 13,
-            fontWeight: 500,
-            color: 'text.primary',
-            borderRadius: 1,
-            px: 1.75,
-            py: 0.75,
-            textTransform: 'none',
-            '&:hover': { bgcolor: 'action.hover' }
-          }}
-        >
-          دخول
-        </Button>
-        <Button
-          variant="contained"
-          sx={{
-            fontSize: 13,
-            fontWeight: 600,
-            bgcolor: primaryColor,
-            color: 'white',
-            borderRadius: 1,
-            px: 1.75,
-            py: 0.75,
-            textTransform: 'none',
-            boxShadow: 'none',
-            '&:hover': { bgcolor: primaryColor, boxShadow: 'none', opacity: 0.85 }
-          }}
-        >
-          تسجيل
-        </Button>
+        {isLoggedIn ? (
+          // ✅ لو مسجل دخول — اعرض الـ Avatar مع المنيو
+          <UserMenu user={user} primaryColor={primaryColor} onLogout={logout} />
+        ) : (
+          // ✅ لو مش مسجل — اعرض أزرار دخول وتسجيل
+          <>
+            <Button
+              variant="text"
+              component={Link}
+              to="/login"
+              sx={{
+                fontSize: 13,
+                fontWeight: 500,
+                color: 'text.primary',
+                borderRadius: 1,
+                px: 1.75,
+                py: 0.75,
+                textTransform: 'none',
+                '&:hover': { bgcolor: 'action.hover' }
+              }}
+            >
+              دخول
+            </Button>
+            <Button
+              variant="contained"
+              component={Link}
+              to="/login/register"
+              sx={{
+                fontSize: 13,
+                fontWeight: 600,
+                bgcolor: primaryColor,
+                color: 'white',
+                borderRadius: 1,
+                px: 1.75,
+                py: 0.75,
+                textTransform: 'none',
+                boxShadow: 'none',
+                '&:hover': { bgcolor: primaryColor, boxShadow: 'none', opacity: 0.85 }
+              }}
+            >
+              تسجيل
+            </Button>
+          </>
+        )}
       </Stack>
     </Box>
   );
@@ -194,9 +274,26 @@ function BottomBar({ primaryColor }) {
 // ==============================|| HEADER - MOBILE DRAWER ||============================== //
 
 function MobileDrawer({ open, onClose, primaryColor }) {
+  const { isLoggedIn, user, logout } = useAuth();
+
   return (
     <Drawer anchor="top" open={open} onClose={onClose} sx={{ '& .MuiDrawer-paper': { backgroundImage: 'none' } }}>
       <Box sx={{ p: 3 }}>
+        {/* لو مسجل دخول اعرض بياناته */}
+        {isLoggedIn && user && (
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2, pb: 2, borderBottom: '1px solid', borderColor: 'divider' }}>
+            <Avatar sx={{ bgcolor: primaryColor, width: 40, height: 40, fontSize: 14, fontWeight: 700 }}>
+              {`${user?.firstName?.[0] || ''}${user?.lastName?.[0] || ''}`.toUpperCase()}
+            </Avatar>
+            <Box>
+              <Typography sx={{ fontWeight: 700, fontSize: 14 }}>
+                {user?.firstName} {user?.lastName}
+              </Typography>
+              <Typography sx={{ fontSize: 12, color: 'text.secondary' }}>{user?.email}</Typography>
+            </Box>
+          </Box>
+        )}
+
         <List sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
           {navLinks.map((label) => (
             <ListItemButton key={label} sx={{ px: 0, borderRadius: 1 }}>
@@ -206,18 +303,46 @@ function MobileDrawer({ open, onClose, primaryColor }) {
         </List>
 
         <Stack gap={1} mt={2}>
-          {['المتجر', 'ادعمنا', 'دخول'].map((label) => (
+          {['المتجر', 'ادعمنا'].map((label) => (
             <Button key={label} variant="outlined" fullWidth sx={{ textTransform: 'none', borderColor: 'divider', color: 'text.primary' }}>
               {label}
             </Button>
           ))}
-          <Button
-            variant="contained"
-            fullWidth
-            sx={{ textTransform: 'none', bgcolor: primaryColor, '&:hover': { bgcolor: primaryColor, opacity: 0.85 } }}
-          >
-            تسجيل
-          </Button>
+
+          {isLoggedIn ? (
+            <Button
+              variant="contained"
+              fullWidth
+              onClick={() => {
+                logout();
+                onClose();
+              }}
+              sx={{ textTransform: 'none', bgcolor: 'error.main', '&:hover': { bgcolor: 'error.dark' } }}
+            >
+              تسجيل الخروج
+            </Button>
+          ) : (
+            <>
+              <Button
+                variant="outlined"
+                fullWidth
+                component={Link}
+                to="/login"
+                sx={{ textTransform: 'none', borderColor: 'divider', color: 'text.primary' }}
+              >
+                دخول
+              </Button>
+              <Button
+                variant="contained"
+                fullWidth
+                component={Link}
+                to="/login/register"
+                sx={{ textTransform: 'none', bgcolor: primaryColor, '&:hover': { bgcolor: primaryColor, opacity: 0.85 } }}
+              >
+                تسجيل
+              </Button>
+            </>
+          )}
         </Stack>
       </Box>
     </Drawer>
@@ -239,12 +364,10 @@ export default function Header() {
         <TopBar primaryColor={primaryColor} onClose={() => setIsTopBarVisible(false)} isVisible={isTopBarVisible} />
         <BottomBar primaryColor={primaryColor} />
       </Box>
+
       {/* Mobile */}
       <Box sx={{ display: { xs: 'block', md: 'none' } }}>
-        {/* Mobile Top Bar */}
         <TopBar primaryColor={primaryColor} onClose={() => setIsTopBarVisible(false)} isVisible={isTopBarVisible} />
-
-        {/* Mobile Navigation Bar */}
         <Container disableGutters>
           <Toolbar sx={{ justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexShrink: 0, height: 24 }}>

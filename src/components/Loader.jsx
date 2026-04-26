@@ -3,7 +3,8 @@ import { styled } from '@mui/material/styles';
 import LinearProgress from '@mui/material/LinearProgress';
 
 // lottie
-import logoAnimation from 'assets/images/logo.gif';
+import logoAnimation from 'assets/images/logoAnimation.json';
+import Lottie from 'lottie-react';
 
 // loader style
 const LoaderWrapper = styled('div')(({ theme }) => ({
@@ -26,7 +27,7 @@ const LoaderWrapper = styled('div')(({ theme }) => ({
 export default function Loader() {
   return (
     <LoaderWrapper>
-      <img src={logoAnimation} height={100} width={100} alt="Loading..." />
+      <Lottie animationData={logoAnimation} loop={true} style={{ width: 100, height: 100 }} />
     </LoaderWrapper>
   );
 }

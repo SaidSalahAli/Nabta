@@ -18,6 +18,7 @@ const MaintenanceComingSoon2 = Loadable(lazy(() => import('pages/maintenance/com
 // render - sample page
 const SamplePage = Loadable(lazy(() => import('pages/extra-pages/sample-page')));
 const Home = Loadable(lazy(() => import('pages/feature/gest/home')));
+const Dashboard = Loadable(lazy(() => import('pages/dashboard')));
 
 // ==============================|| MAIN ROUTES ||============================== //
 
@@ -38,6 +39,10 @@ const MainRoutes = {
       path: '/',
       element: <DashboardLayout />,
       children: [
+        {
+          path: 'dashboard',
+          element: <Dashboard />
+        },
         {
           path: 'sample-page',
           element: <SamplePage />

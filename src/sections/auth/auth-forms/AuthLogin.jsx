@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom';
 import { preload } from 'swr';
 
 // material-ui
@@ -34,6 +34,8 @@ import { Eye, EyeSlash } from 'iconsax-react';
 
 export default function AuthLogin({ forgot }) {
   const [checked, setChecked] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const { isLoggedIn, login } = useAuth();
   const scriptedRef = useScriptRef();
@@ -51,8 +53,8 @@ export default function AuthLogin({ forgot }) {
     <>
       <Formik
         initialValues={{
-          email: 'info@phoenixcoded.com',
-          password: '123456',
+          email: 'ma234222@test.com',
+          password: 'Ma.123456',
           submit: null
         }}
         validationSchema={Yup.object().shape({
@@ -70,6 +72,9 @@ export default function AuthLogin({ forgot }) {
               setStatus({ success: true });
               setSubmitting(false);
               preload('api/menu/dashboard', fetcher); // load menu on login success
+              // Redirect to dashboard after successful login
+              const from = location.state?.from || '/dashboard';
+              navigate(from, { replace: true });
             }
           } catch (err) {
             console.error(err);
