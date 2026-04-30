@@ -14,7 +14,8 @@ export default function AboutNabta({ shouldAnimate = false }) {
         sx={{
           py: { xs: 8, md: 6 },
           position: 'relative',
-          overflow: 'hidden'
+          overflow: 'hidden',
+          backgroundColor: '#ffff'
         }}
       >
         <Container maxWidth="lg">
@@ -70,7 +71,7 @@ export default function AboutNabta({ shouldAnimate = false }) {
                 content="مهمتنا الأساسية نابعة من شعارنا.. اغرس بذرة.. تنبت نبته.. تحصد ثمرة. نحن نغرس بذور المعرفة الصافية داخل أطفالنا، ونسقيها بالحب والمتابعة لتصبح نبتة جميلة وراسخة، وتنتج يانعة بما نأمله."
               />
 
-              <Box sx={{ display: 'flex', justifyContent: 'center', py: 2 }}>
+              <Box sx={{ display: { xs: 'none', md: 'flex' }, justifyContent: 'center', py: 2 }}>
                 <CenterCircle />
               </Box>
 
@@ -157,7 +158,7 @@ export default function AboutNabta({ shouldAnimate = false }) {
                   zIndex: 3
                 }}
               >
-                <CenterCircle />
+                {/* <CenterCircle /> */}
               </Box>
             </Box>
           </Box>
@@ -213,8 +214,8 @@ function CenterCircle() {
           width: '100%',
           height: '100%',
           borderRadius: '50%',
-          border: '2px solid #0088CC',
-          background: 'radial-gradient(circle at 30% 30%, #fffefb 0%, #fff8ec 100%)',
+          border: '8px solid #beebfe',
+          background: '#098bc9',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -225,7 +226,7 @@ function CenterCircle() {
           sx={{
             fontSize: { xs: '32px', md: '30px' },
             fontWeight: 800,
-            color: '#3A3246',
+            color: 'white',
             lineHeight: 1
           }}
         >

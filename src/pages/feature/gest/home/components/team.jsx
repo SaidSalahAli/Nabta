@@ -4,6 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { FreeMode } from 'swiper/modules';
 import { ArrowLeft, ArrowRight } from 'iconsax-react';
+import img from 'assets/images/test2.jpeg';
 
 export default function Team({ shouldAnimate = false }) {
   const [checked, setChecked] = useState(false);
@@ -22,31 +23,31 @@ export default function Team({ shouldAnimate = false }) {
       id: 1,
       name: 'اسم العضو',
       role: 'الدور الوظيفي',
-      image: '/placeholder-person.png'
+      image: img
     },
     {
       id: 2,
       name: 'اسم العضو',
       role: 'الدور الوظيفي',
-      image: '/placeholder-person.png'
+      image: img
     },
     {
       id: 3,
       name: 'اسم العضو',
       role: 'الدور الوظيفي',
-      image: '/placeholder-person.png'
+      image: img
     },
     {
       id: 4,
       name: 'اسم العضو',
       role: 'الدور الوظيفي',
-      image: '/placeholder-person.png'
+      image: img
     },
     {
       id: 5,
       name: 'اسم العضو',
       role: 'الدور الوظيفي',
-      image: '/placeholder-person.png'
+      image: img
     }
   ];
 
@@ -127,10 +128,10 @@ export default function Team({ shouldAnimate = false }) {
                   <Fade in={checked} timeout={800} style={{ transitionDelay: checked ? `${index * 100}ms` : '0ms' }}>
                     <Box
                       sx={{
-                        borderRadius: '24px',
+                        borderRadius: '12px',
                         backgroundColor: '#fff',
                         border: '1px solid #ececec',
-                        p: 2.5,
+                        p: 2,
                         transition: 'all 0.3s ease',
                         '&:hover': {
                           transform: 'translateY(-6px)',
@@ -142,7 +143,7 @@ export default function Team({ shouldAnimate = false }) {
                         sx={{
                           width: '100%',
                           height: 240,
-                          borderRadius: '20px',
+                          borderRadius: '12px',
                           overflow: 'hidden',
                           backgroundColor: '#f7f7f7',
                           mb: 2
@@ -236,5 +237,5 @@ export default function Team({ shouldAnimate = false }) {
         </Container>
       </Box>
     </Fade>
-  ); 
+  );
 }

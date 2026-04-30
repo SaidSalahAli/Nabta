@@ -6,6 +6,7 @@ import { SimpleLayoutType } from 'config';
 import DashboardLayout from 'layout/Dashboard';
 import PagesLayout from 'layout/Pages';
 import SimpleLayout from 'layout/Simple';
+import AuthGuard from 'utils/route-guard/AuthGuard';
 
 // pages routing
 const MaintenanceError = Loadable(lazy(() => import('pages/maintenance/error/404')));
@@ -37,7 +38,11 @@ const MainRoutes = {
     },
     {
       path: '/',
-      element: <DashboardLayout />,
+      element: (
+        <AuthGuard>
+          <DashboardLayout />
+        </AuthGuard>
+      ),
       children: [
         {
           path: 'dashboard',

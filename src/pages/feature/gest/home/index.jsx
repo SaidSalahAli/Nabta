@@ -12,6 +12,7 @@ import NabtaNumbers from './components/nabta-numbers';
 import PartnersReviews from './components/partners-reviews';
 import Partners from './components/partners';
 import Team from './components/team';
+import GoalsPrinciples from './components/goals-Principles';
 
 export default function Home() {
   return (
@@ -21,6 +22,8 @@ export default function Home() {
       <Characters shouldAnimate={true} />
       <Worksheets shouldAnimate={true} />
       <WhyNabta shouldAnimate={true} />
+      <GoalsPrinciples shouldAnimate={true} />
+
       <NabtaNumbers shouldAnimate={true} />
       <Applications shouldAnimate={true} />
       <AboutNabta shouldAnimate={true} />

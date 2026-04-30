@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { FreeMode } from 'swiper/modules';
 import { ArrowLeft, ArrowRight } from 'iconsax-react';
-
+import img from 'assets/images/test2.jpeg';
 export default function Partners({ shouldAnimate = false }) {
   const [checked, setChecked] = useState(false);
   const swiperRef = useRef(null);
@@ -18,12 +18,12 @@ export default function Partners({ shouldAnimate = false }) {
   }, [shouldAnimate]);
 
   const partners = [
-    { id: 1, name: 'الشريك الأول', logo: '/placeholder-logo.png' },
-    { id: 2, name: 'الشريك الثاني', logo: '/placeholder-logo.png' },
-    { id: 3, name: 'الشريك الثالث', logo: '/placeholder-logo.png' },
-    { id: 4, name: 'الشريك الرابع', logo: '/placeholder-logo.png' },
-    { id: 5, name: 'الشريك الخامس', logo: '/placeholder-logo.png' },
-    { id: 6, name: 'الشريك السادس', logo: '/placeholder-logo.png' }
+    { id: 1, name: 'الشريك الأول', logo: img },
+    { id: 2, name: 'الشريك الثاني', logo: img },
+    { id: 3, name: 'الشريك الثالث', logo: img },
+    { id: 4, name: 'الشريك الرابع', logo: img },
+    { id: 5, name: 'الشريك الخامس', logo: img },
+    { id: 6, name: 'الشريك السادس', logo: img }
   ];
 
   const handleSlideChange = () => {
@@ -106,14 +106,14 @@ export default function Partners({ shouldAnimate = false }) {
                   >
                     <Box
                       sx={{
-                        height: 210,
+                        height: 'auto',
                         border: '1.5px solid #e8e8e8',
-                        borderRadius: '20px',
+                        borderRadius: '12px',
                         backgroundColor: '#fff',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        p: 3,
+                        p: 1,
                         transition: 'all 0.3s ease',
                         '&:hover': {
                           transform: 'translateY(-6px)',
@@ -126,6 +126,7 @@ export default function Partners({ shouldAnimate = false }) {
                         src={partner.logo}
                         alt={partner.name}
                         sx={{
+                          borderRadius: '12px',
                           width: '100%',
                           height: '100%',
                           objectFit: 'contain'

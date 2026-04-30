@@ -34,7 +34,7 @@ export default function WhyNabta({ shouldAnimate = false }) {
         sx={{
           py: { xs: 6, md: 8 },
           width: '100%',
-          backgroundColor: '#f8f9fa'
+          backgroundColor: '#ffff'
         }}
       >
         <Container maxWidth="lg">

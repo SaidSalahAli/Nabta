@@ -42,10 +42,11 @@ const getUserFromToken = (token) => {
   try {
     const decoded = jwtDecode(token);
     return {
-      id: decoded.UserId,
-      email: decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'] || decoded.email || '',
+      id: decoded.id || decoded.UserId,
+      email: decoded.email || decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'] || '',
       firstName: decoded.firstName || '',
-      lastName: decoded.lastName || ''
+      lastName: decoded.lastName || '',
+      role: decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || decoded.role || 'User'
     };
   } catch {
     return null;
@@ -73,7 +74,6 @@ export const JWTProvider = ({ children }) => {
 
           const elapsed = Date.now() - start;
           if (elapsed < minDisplay) await new Promise((r) => setTimeout(r, minDisplay - elapsed));
-
           dispatch({
             type: LOGIN,
             payload: { isLoggedIn: true, user }
@@ -98,9 +98,12 @@ export const JWTProvider = ({ children }) => {
     const response = await axios.post('api/AccountNabta/Login', { email, password });
     const { accessToken, user } = response.data;
     setSession(accessToken);
+
+    const userFromToken = getUserFromToken(accessToken);
+
     dispatch({
       type: LOGIN,
-      payload: { isLoggedIn: true, user }
+      payload: { isLoggedIn: true, user: userFromToken || user }
     });
   };
 
@@ -113,7 +116,7 @@ export const JWTProvider = ({ children }) => {
       mobail: mobile || ''
     };
 
-    const response = await axios.post('api/AccountNabta/Register', payload);
+    const response = await axios.post('api/AccountNabta/Rigester', payload);
 
     const data = response.data || response;
     const serviceToken = data.accessToken || data.serviceToken || data.token;

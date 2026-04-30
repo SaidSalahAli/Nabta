@@ -7,8 +7,8 @@ import useAuth from 'hooks/useAuth';
 
 // ==============================|| AUTH GUARD ||============================== //
 
-export default function AuthGuard({ children }) {
-  const { isLoggedIn } = useAuth();
+export default function AuthGuard({ children, requiredRole = null }) {
+  const { isLoggedIn, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -20,10 +20,16 @@ export default function AuthGuard({ children }) {
         },
         replace: true
       });
+    } else if (requiredRole && user?.role !== requiredRole) {
+      // If a specific role is required and user doesn't have it, redirect to home
+      navigate('/', { replace: true });
     }
-  }, [isLoggedIn, navigate, location]);
+  }, [isLoggedIn, user, navigate, location, requiredRole]);
 
   return children;
 }
 
-AuthGuard.propTypes = { children: PropTypes.any };
+AuthGuard.propTypes = {
+  children: PropTypes.any,
+  requiredRole: PropTypes.string
+};

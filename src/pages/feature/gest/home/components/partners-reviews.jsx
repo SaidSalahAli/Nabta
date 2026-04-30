@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Container, Fade, Button } from '@mui/material';
-import img from 'assets/images/test.png';
+import img from 'assets/images/test.jpeg';
 import EpisodeSwiper from '../../../../../components/EpisodeSwiper';
 // import imgbg from 'assets/images/test2.png';
 export default function PartnersReviews({ shouldAnimate = false }) {
