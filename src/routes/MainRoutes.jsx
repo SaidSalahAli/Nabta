@@ -21,6 +21,18 @@ const SamplePage = Loadable(lazy(() => import('pages/extra-pages/sample-page')))
 const Home = Loadable(lazy(() => import('pages/feature/gest/home')));
 const Dashboard = Loadable(lazy(() => import('pages/dashboard')));
 
+// render - episodes
+const EpisodesList = Loadable(lazy(() => import('pages/episodes')));
+const CreateEpisode = Loadable(lazy(() => import('pages/episodes/create')));
+const EditEpisode = Loadable(lazy(() => import('pages/episodes/edit')));
+const ViewEpisode = Loadable(lazy(() => import('pages/episodes/view')));
+
+// render - episode categories
+const EpisodeCategories = Loadable(lazy(() => import('pages/episode-categories')));
+
+// render - worksheets
+const Worksheets = Loadable(lazy(() => import('pages/worksheets')));
+
 // ==============================|| MAIN ROUTES ||============================== //
 
 const MainRoutes = {
@@ -51,6 +63,30 @@ const MainRoutes = {
         {
           path: 'sample-page',
           element: <SamplePage />
+        },
+        {
+          path: 'episodes',
+          element: <EpisodesList />
+        },
+        {
+          path: 'episodes/create',
+          element: <CreateEpisode />
+        },
+        {
+          path: 'episodes/:id',
+          element: <ViewEpisode />
+        },
+        {
+          path: 'episodes/:id/edit',
+          element: <EditEpisode />
+        },
+        {
+          path: 'episode-categories',
+          element: <EpisodeCategories />
+        },
+        {
+          path: 'worksheets',
+          element: <Worksheets />
         }
       ]
     },

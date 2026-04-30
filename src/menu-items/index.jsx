@@ -2,11 +2,12 @@
 import pages from './pages';
 import samplePage from './sample-page';
 import support from './support';
+import episodes from './episodes';
 
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
-  items: [samplePage, pages]
+  items: [episodes, pages]
 };
 
 export default menuItems;
