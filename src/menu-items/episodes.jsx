@@ -16,24 +16,24 @@ const episodes = {
   type: 'group',
   children: [
     {
-      id: 'episodes',
+      id: 'dashboard/episodes',
       title: 'الحلقات',
       type: 'item',
-      url: '/episodes',
+      url: '/dashboard/episodes',
       icon: icons.episodes
     },
     {
-      id: 'episode-categories',
+      id: 'dashboard/episode-categories',
       title: 'تصنيفات الحلقات',
       type: 'item',
-      url: '/episode-categories',
+      url: '/dashboard/episode-categories',
       icon: icons.categories
     },
     {
-      id: 'worksheets',
+      id: 'dashboard/worksheets',
       title: 'أوراق العمل',
       type: 'item',
-      url: '/worksheets',
+      url: '/dashboard/worksheets',
       icon: icons.worksheets
     }
   ]

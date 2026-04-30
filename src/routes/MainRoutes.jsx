@@ -19,19 +19,19 @@ const MaintenanceComingSoon2 = Loadable(lazy(() => import('pages/maintenance/com
 // render - sample page
 const SamplePage = Loadable(lazy(() => import('pages/extra-pages/sample-page')));
 const Home = Loadable(lazy(() => import('pages/feature/gest/home')));
-const Dashboard = Loadable(lazy(() => import('pages/dashboard')));
+const Dashboard = Loadable(lazy(() => import('pages/feature/control-panel/dashboard')));
 
 // render - episodes
-const EpisodesList = Loadable(lazy(() => import('pages/episodes')));
-const CreateEpisode = Loadable(lazy(() => import('pages/episodes/create')));
-const EditEpisode = Loadable(lazy(() => import('pages/episodes/edit')));
-const ViewEpisode = Loadable(lazy(() => import('pages/episodes/view')));
+const EpisodesList = Loadable(lazy(() => import('pages/feature/control-panel/episodes')));
+const CreateEpisode = Loadable(lazy(() => import('pages/feature/control-panel/episodes/create')));
+const EditEpisode = Loadable(lazy(() => import('pages/feature/control-panel/episodes/edit')));
+const ViewEpisode = Loadable(lazy(() => import('pages/feature/control-panel/episodes/view')));
 
 // render - episode categories
-const EpisodeCategories = Loadable(lazy(() => import('pages/episode-categories')));
+const EpisodeCategories = Loadable(lazy(() => import('pages/feature/control-panel/episode-categories')));
 
 // render - worksheets
-const Worksheets = Loadable(lazy(() => import('pages/worksheets')));
+const Worksheets = Loadable(lazy(() => import('pages/feature/control-panel/worksheets')));
 
 // ==============================|| MAIN ROUTES ||============================== //
 
@@ -61,31 +61,27 @@ const MainRoutes = {
           element: <Dashboard />
         },
         {
-          path: 'sample-page',
-          element: <SamplePage />
-        },
-        {
-          path: 'episodes',
+          path: 'dashboard/episodes',
           element: <EpisodesList />
         },
         {
-          path: 'episodes/create',
+          path: 'dashboard/episodes/create',
           element: <CreateEpisode />
         },
         {
-          path: 'episodes/:id',
+          path: 'dashboard/episodes/:id',
           element: <ViewEpisode />
         },
         {
-          path: 'episodes/:id/edit',
+          path: 'dashboard/episodes/:id/edit',
           element: <EditEpisode />
         },
         {
-          path: 'episode-categories',
+          path: 'dashboard/episode-categories',
           element: <EpisodeCategories />
         },
         {
-          path: 'worksheets',
+          path: 'dashboard/worksheets',
           element: <Worksheets />
         }
       ]

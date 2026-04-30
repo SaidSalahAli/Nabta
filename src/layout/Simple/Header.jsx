@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
 // material-ui
 import AppBar from '@mui/material/AppBar';
@@ -19,6 +20,7 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
 
 // assets
 import GooglePlay from 'assets/Home/google-play-badge-logo-svgrepo-com.png';
@@ -84,10 +86,16 @@ function TopBar({ primaryColor, onClose, isVisible }) {
 // ==============================|| USER MENU ||============================== //
 
 function UserMenu({ user, primaryColor, onLogout }) {
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
   const initials = `${user?.firstName?.[0] || ''}${user?.lastName?.[0] || ''}`.toUpperCase();
+
+  const handleDashboardClick = () => {
+    setAnchorEl(null);
+    navigate('/dashboard/episodes');
+  };
 
   return (
     <>
@@ -126,9 +134,12 @@ function UserMenu({ user, primaryColor, onLogout }) {
           <Typography sx={{ fontSize: 12, color: 'text.secondary', mt: 0.25 }}>{user?.email}</Typography>
         </Box>
 
-        <MenuItem onClick={() => setAnchorEl(null)} component={Link} to="/profile" sx={{ fontSize: 14, py: 1.25 }}>
-          الملف الشخصي
+        <MenuItem onClick={handleDashboardClick} sx={{ fontSize: 14, py: 1.25 }}>
+          {/* <LayoutAlt size={18} style={{ marginRight: 8 }} /> */}
+          لوحة التحكم
         </MenuItem>
+
+        <Divider />
 
         <MenuItem
           onClick={() => {
@@ -142,9 +153,7 @@ function UserMenu({ user, primaryColor, onLogout }) {
       </Menu>
     </>
   );
-}
-
-// ==============================|| HEADER - BOTTOM BAR ||============================== //
+} // ==============================|| HEADER - BOTTOM BAR ||============================== //
 
 const navLinks = ['الصفحة الرئسية', 'حلقات', 'تطبيقات', 'أوراق عمل', 'قصتنا'];
 
