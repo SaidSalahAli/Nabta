@@ -9,12 +9,13 @@ import axiosServices, { fetcher } from 'utils/axios';
 // ==============================|| API - EPISODE CATEGORIES ||============================== //
 
 const endpoints = {
-  key: 'api/admin/episode-categories',
-  list: 'api/admin/episode-categories',
-  create: 'api/admin/episode-categories',
-  read: (id) => `api/admin/episode-categories/${id}`,
-  update: (id) => `api/admin/episode-categories/${id}`,
-  delete: (id) => `api/admin/episode-categories/${id}`
+  key: 'api/EpisodeCategory/List',
+  list: 'api/EpisodeCategory/List',
+  create: 'api/EpisodeCategory/Add',
+  read: (id) => `api/EpisodeCategory/List?id=${id}`,
+  update: (id) => `api/EpisodeCategory/Update/${id}`,
+  delete: (id) => `api/EpisodeCategory/Delete/${id}`,
+  search: (name) => `api/EpisodeCategory/Search?name=${name}`
 };
 
 // Get all categories
@@ -32,7 +33,7 @@ export function useGetEpisodeCategories(params = {}) {
 
   const memoizedValue = useMemo(
     () => ({
-      categories: data?.data || [],
+      categories: Array.isArray(data) ? data : data?.data || [],
       categoriesLoading: isLoading,
       categoriesError: error,
       categoriesMutate: mutateData
@@ -100,5 +101,15 @@ export async function deleteEpisodeCategory(id) {
     return response.data;
   } catch (error) {
     return Promise.reject((error.response && error.response.data) || 'Error deleting category');
+  }
+}
+
+// Search categories by name
+export async function searchEpisodeCategories(name) {
+  try {
+    const response = await axiosServices.get(endpoints.search(name));
+    return response.data;
+  } catch (error) {
+    return Promise.reject((error.response && error.response.data) || 'Error searching categories');
   }
 }

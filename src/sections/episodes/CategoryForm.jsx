@@ -23,33 +23,24 @@ import { openSnackbar } from 'api/snackbar';
 // ==============================|| CATEGORY FORM ||============================== //
 
 const validationSchema = Yup.object().shape({
-  name_ar: Yup.string().required('اسم التصنيف مطلوب'),
-  slug: Yup.string().required('الرابط النصي مطلوب'),
-  description_ar: Yup.string(),
-  image: Yup.string().url('رابط الصورة غير صحيح'),
-  sort_order: Yup.number().min(0, 'يجب أن تكون قيمة موجبة'),
-  is_active: Yup.boolean()
+  nameAr: Yup.string().required('اسم التصنيف مطلوب'),
+  descriptionAr: Yup.string(),
+  image: Yup.string()
 });
 
 export default function CategoryForm({ category = null, onSubmit, isLoading = false, onCancel }) {
   const [initialValues, setInitialValues] = useState({
-    name_ar: '',
-    slug: '',
-    description_ar: '',
-    image: '',
-    sort_order: 0,
-    is_active: true
+    nameAr: '',
+    descriptionAr: '',
+    image: ''
   });
 
   useEffect(() => {
     if (category) {
       setInitialValues({
-        name_ar: category.name_ar || '',
-        slug: category.slug || '',
-        description_ar: category.description_ar || '',
-        image: category.image || '',
-        sort_order: category.sort_order || 0,
-        is_active: category.is_active !== undefined ? category.is_active : true
+        nameAr: category.NameAr || category.nameAr || '',
+        descriptionAr: category.DescriptionAr || category.descriptionAr || '',
+        image: category.Image || category.image || ''
       });
     }
   }, [category]);
@@ -77,46 +68,23 @@ export default function CategoryForm({ category = null, onSubmit, isLoading = fa
         <form onSubmit={handleSubmit}>
           <Grid container spacing={3}>
             {/* Name */}
-            <Grid size={{ xs: 12, md: 6 }}>
+            <Grid size={{ xs: 12 }}>
               <Stack spacing={1}>
-                <InputLabel htmlFor="name_ar">اسم التصنيف</InputLabel>
+                <InputLabel htmlFor="nameAr">اسم التصنيف</InputLabel>
                 <OutlinedInput
-                  id="name_ar"
+                  id="nameAr"
                   type="text"
-                  value={values.name_ar}
-                  name="name_ar"
+                  value={values.nameAr}
+                  name="nameAr"
                   onBlur={handleBlur}
                   onChange={handleChange}
                   placeholder="أدخل اسم التصنيف"
                   fullWidth
-                  error={Boolean(touched.name_ar && errors.name_ar)}
+                  error={Boolean(touched.nameAr && errors.nameAr)}
                 />
-                {touched.name_ar && errors.name_ar && (
-                  <FormHelperText error id="helper-text-name_ar">
-                    {errors.name_ar}
-                  </FormHelperText>
-                )}
-              </Stack>
-            </Grid>
-
-            {/* Slug */}
-            <Grid size={{ xs: 12, md: 6 }}>
-              <Stack spacing={1}>
-                <InputLabel htmlFor="slug">الرابط النصي</InputLabel>
-                <OutlinedInput
-                  id="slug"
-                  type="text"
-                  value={values.slug}
-                  name="slug"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  placeholder="مثال: quran"
-                  fullWidth
-                  error={Boolean(touched.slug && errors.slug)}
-                />
-                {touched.slug && errors.slug && (
-                  <FormHelperText error id="helper-text-slug">
-                    {errors.slug}
+                {touched.nameAr && errors.nameAr && (
+                  <FormHelperText error id="helper-text-nameAr">
+                    {errors.nameAr}
                   </FormHelperText>
                 )}
               </Stack>
@@ -125,23 +93,23 @@ export default function CategoryForm({ category = null, onSubmit, isLoading = fa
             {/* Description */}
             <Grid size={{ xs: 12 }}>
               <Stack spacing={1}>
-                <InputLabel htmlFor="description_ar">الوصف</InputLabel>
+                <InputLabel htmlFor="descriptionAr">الوصف</InputLabel>
                 <OutlinedInput
-                  id="description_ar"
+                  id="descriptionAr"
                   type="text"
-                  value={values.description_ar}
-                  name="description_ar"
+                  value={values.descriptionAr}
+                  name="descriptionAr"
                   onBlur={handleBlur}
                   onChange={handleChange}
                   placeholder="وصف التصنيف"
                   fullWidth
                   multiline
                   rows={3}
-                  error={Boolean(touched.description_ar && errors.description_ar)}
+                  error={Boolean(touched.descriptionAr && errors.descriptionAr)}
                 />
-                {touched.description_ar && errors.description_ar && (
-                  <FormHelperText error id="helper-text-description_ar">
-                    {errors.description_ar}
+                {touched.descriptionAr && errors.descriptionAr && (
+                  <FormHelperText error id="helper-text-descriptionAr">
+                    {errors.descriptionAr}
                   </FormHelperText>
                 )}
               </Stack>
@@ -168,41 +136,6 @@ export default function CategoryForm({ category = null, onSubmit, isLoading = fa
                   </FormHelperText>
                 )}
               </Stack>
-            </Grid>
-
-            {/* Sort Order */}
-            <Grid size={{ xs: 12, md: 6 }}>
-              <Stack spacing={1}>
-                <InputLabel htmlFor="sort_order">ترتيب العرض</InputLabel>
-                <OutlinedInput
-                  id="sort_order"
-                  type="number"
-                  value={values.sort_order}
-                  name="sort_order"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  placeholder="0"
-                  fullWidth
-                  error={Boolean(touched.sort_order && errors.sort_order)}
-                />
-                {touched.sort_order && errors.sort_order && (
-                  <FormHelperText error id="helper-text-sort_order">
-                    {errors.sort_order}
-                  </FormHelperText>
-                )}
-              </Stack>
-            </Grid>
-
-            {/* Active Status */}
-            <Grid size={{ xs: 12, md: 6 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', pt: 2 }}>
-                <FormControlLabel
-                  control={
-                    <Checkbox checked={values.is_active} onChange={(e) => setFieldValue('is_active', e.target.checked)} name="is_active" />
-                  }
-                  label="نشط"
-                />
-              </Box>
             </Grid>
 
             {/* Form Actions */}

@@ -46,10 +46,10 @@ export default function EpisodeCategories() {
 
   const { categories = [], categoriesLoading, categoriesMutate } = useGetEpisodeCategories();
 
-  // Filter categories
-  const filteredCategories = categories.filter((category) => category.name_ar.toLowerCase().includes(searchTerm.toLowerCase()));
-
-  // Pagination
+  // Filter categories - support both old and new field names
+  const filteredCategories = categories.filter((category) =>
+    (category.NameAr || category.nameAr || category.name_ar || '').toLowerCase().includes(searchTerm.toLowerCase())
+  ); // Pagination
   const paginatedCategories = filteredCategories.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   const handleChangePage = (event, newPage) => {
@@ -79,8 +79,8 @@ export default function EpisodeCategories() {
   const handleFormSubmit = async (values) => {
     setFormLoading(true);
     try {
-      if (selectedCategory?.id) {
-        await updateEpisodeCategory(selectedCategory.id, values);
+      if (selectedCategory?.Id || selectedCategory?.id) {
+        await updateEpisodeCategory(selectedCategory.Id || selectedCategory.id, values);
         openSnackbar({
           open: true,
           message: 'تم تحديث التصنيف بنجاح',
@@ -113,7 +113,7 @@ export default function EpisodeCategories() {
 
   const handleDeleteConfirm = async () => {
     try {
-      await deleteEpisodeCategory(selectedCategory.id);
+      await deleteEpisodeCategory(selectedCategory.Id || selectedCategory.id);
       openSnackbar({
         open: true,
         message: 'تم حذف التصنيف بنجاح',
@@ -174,37 +174,27 @@ export default function EpisodeCategories() {
                   <TableCell align="center">الصورة</TableCell>
                   <TableCell>الاسم</TableCell>
                   <TableCell>الوصف</TableCell>
-                  <TableCell align="center">النشاط</TableCell>
-                  <TableCell align="center">الترتيب</TableCell>
                   <TableCell align="center">الإجراءات</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {paginatedCategories.length > 0 ? (
                   paginatedCategories.map((category) => (
-                    <TableRow key={category.id} hover>
+                    <TableRow key={category.Id || category.id} hover>
                       <TableCell align="center">
-                        {category.image && (
+                        {category.Image && (
                           <Box
                             component="img"
-                            src={category.image}
-                            alt={category.name_ar}
+                            src={category.Image}
+                            alt={category.NameAr || category.nameAr || category.name_ar}
                             sx={{ width: 50, height: 50, borderRadius: 1, objectFit: 'cover' }}
                           />
                         )}
                       </TableCell>
-                      <TableCell>{category.name_ar}</TableCell>
+                      <TableCell>{category.NameAr || category.nameAr || category.name_ar}</TableCell>
                       <TableCell sx={{ maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {category.description_ar}
+                        {category.DescriptionAr || category.descriptionAr || category.description_ar}
                       </TableCell>
-                      <TableCell align="center">
-                        <Chip
-                          label={category.is_active ? 'نشط' : 'غير نشط'}
-                          color={category.is_active ? 'success' : 'default'}
-                          size="small"
-                        />
-                      </TableCell>
-                      <TableCell align="center">{category.sort_order}</TableCell>
                       <TableCell align="center">
                         <Stack direction="row" spacing={0.5} justifyContent="center">
                           <Button size="small" variant="outlined" onClick={() => handleEditClick(category)} startIcon={<Edit size={16} />}>
@@ -249,7 +239,7 @@ export default function EpisodeCategories() {
 
       {/* Form Dialog */}
       <Dialog open={formDialogOpen} onClose={() => setFormDialogOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{selectedCategory?.id ? 'تحرير التصنيف' : 'إضافة تصنيف جديد'}</DialogTitle>
+        <DialogTitle>{selectedCategory?.Id || selectedCategory?.id ? 'تحرير التصنيف' : 'إضافة تصنيف جديد'}</DialogTitle>
         <DialogContent sx={{ pt: 2 }}>
           <CategoryForm
             category={selectedCategory}
@@ -264,7 +254,10 @@ export default function EpisodeCategories() {
       <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
         <DialogTitle>تأكيد الحذف</DialogTitle>
         <DialogContent>
-          <DialogContentText>هل تريد بالتأكيد حذف التصنيف "{selectedCategory?.name_ar}"؟ لا يمكن التراجع عن هذا الإجراء.</DialogContentText>
+          <DialogContentText>
+            هل تريد بالتأكيد حذف التصنيف "{selectedCategory?.NameAr || selectedCategory?.nameAr || selectedCategory?.name_ar}"؟ لا يمكن
+            التراجع عن هذا الإجراء.
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDeleteDialogOpen(false)}>إلغاء</Button>

@@ -10,6 +10,10 @@ axiosServices.interceptors.request.use(
     if (accessToken) {
       config.headers['Authorization'] = `Bearer ${accessToken}`;
     }
+    // Ensure Content-Type is set for POST requests
+    if (!config.headers['Content-Type'] && config.method === 'post') {
+      config.headers['Content-Type'] = 'application/json';
+    }
     return config;
   },
   (error) => {
@@ -22,6 +26,12 @@ axiosServices.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401 && !window.location.href.includes('/login')) {
       window.location.pathname = '/maintenance/500';
+    }
+    if (error.response?.status === 302 || error.response?.status === 301) {
+      // Handle redirects - usually means auth is required
+      if (!window.location.href.includes('/login')) {
+        window.location.pathname = '/login';
+      }
     }
     return Promise.reject((error.response && error.response.data) || 'Wrong Services');
   }

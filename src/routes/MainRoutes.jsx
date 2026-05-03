@@ -17,7 +17,6 @@ const MaintenanceComingSoon = Loadable(lazy(() => import('pages/maintenance/comi
 const MaintenanceComingSoon2 = Loadable(lazy(() => import('pages/maintenance/coming-soon/coming-soon2')));
 
 // render - sample page
-const SamplePage = Loadable(lazy(() => import('pages/extra-pages/sample-page')));
 const Home = Loadable(lazy(() => import('pages/feature/gest/home')));
 const Dashboard = Loadable(lazy(() => import('pages/feature/control-panel/dashboard')));
 
