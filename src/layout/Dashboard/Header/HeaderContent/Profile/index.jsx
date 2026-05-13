@@ -74,7 +74,7 @@ export default function ProfilePage() {
   const handleLogout = async () => {
     try {
       await logout();
-      navigate(`/login`, {
+      navigate(`/auth/login`, {
         state: {
           from: ''
         }

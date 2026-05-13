@@ -98,9 +98,24 @@ export default function EpisodeForm({ episode = null, onSubmit, isLoading = fals
       setSubmitting(false);
     } catch (err) {
       setStatus({ success: false });
+
+      // معالجة أخطاء API
+      let errorMessage = 'حدث خطأ في العملية';
+      if (err?.errors) {
+        // معالجة أخطاء التحقق من البيانات
+        const errorKeys = Object.keys(err.errors);
+        if (errorKeys.length > 0) {
+          errorMessage = err.errors[errorKeys[0]][0] || errorMessage;
+        }
+      } else if (err?.message) {
+        errorMessage = err.message;
+      } else if (err?.title) {
+        errorMessage = err.title;
+      }
+
       openSnackbar({
         open: true,
-        message: err?.message || 'حدث خطأ في العملية',
+        message: errorMessage,
         variant: 'alert',
         alert: { color: 'error' }
       });
@@ -175,8 +190,8 @@ export default function EpisodeForm({ episode = null, onSubmit, isLoading = fals
                   placeholder="اختر التصنيف"
                 >
                   {categories.map((cat) => (
-                    <MenuItem key={cat.id} value={cat.id}>
-                      {cat.name_ar}
+                    <MenuItem key={cat.Id || cat.id} value={cat.Id || cat.id}>
+                      {cat.NameAr || cat.name_ar}
                     </MenuItem>
                   ))}
                 </TextField>

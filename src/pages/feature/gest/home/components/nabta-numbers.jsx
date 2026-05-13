@@ -3,7 +3,10 @@ import { Box, Container, Typography, Fade } from '@mui/material';
 
 // ✅ iconsax-react
 import { Global, DocumentText, Activity, Mobile } from 'iconsax-react';
-
+import stateImg from 'assets/Home/state.svg';
+import papersImg from 'assets/Home/papers.svg';
+import activityImg from 'assets/Home/activity.svg';
+import beneficiaryImg from 'assets/Home/beneficiary.svg';
 export default function NabtaNumbers({ shouldAnimate = false }) {
   const [checked, setChecked] = useState(false);
 
@@ -18,25 +21,25 @@ export default function NabtaNumbers({ shouldAnimate = false }) {
       id: 1,
       title: '197',
       subtitle: 'دولة',
-      icon: <Global size="48" variant="Linear" />
+      icon: stateImg
     },
     {
       id: 2,
       title: '420',
       subtitle: 'ورقة مذاكرة وتلوين',
-      icon: <DocumentText size="48" variant="Linear" />
+      icon: papersImg
     },
     {
       id: 3,
       title: '420',
       subtitle: 'نشاط تفاعلي',
-      icon: <Activity size="48" variant="Linear" />
+      icon: activityImg
     },
     {
       id: 4,
       title: 'أكثر من 1,180,000',
       subtitle: 'طفل حول العالم استفاد من تطبيق لغتي العربية وموسوعاتنا.',
-      icon: <Mobile size="48" variant="Linear" />
+      icon: beneficiaryImg
     }
   ];
 
@@ -104,18 +107,12 @@ export default function NabtaNumbers({ shouldAnimate = false }) {
                   {/* Icon */}
                   <Box
                     sx={{
-                      mb: 2,
-                      width: 80,
-                      height: 80,
-                      borderRadius: '50%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: '#6b6b6b',
-                      backgroundColor: '#f5f5f5'
+                      width: { xs: 80, sm: 100, md: 120 },
+                      height: { xs: 80, sm: 100, md: 120 },
+                      mb: 2
                     }}
                   >
-                    {item.icon}
+                    <img src={item.icon} alt={item.title} style={{ width: '100%', height: '100%' }} />
                   </Box>
 
                   {/* Number */}

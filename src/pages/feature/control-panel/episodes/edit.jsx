@@ -24,7 +24,7 @@ export default function EditEpisode() {
   const handleSubmit = async (values) => {
     setIsLoading(true);
     try {
-      await updateEpisode(id, values);
+      await updateEpisode({ ...values, ID: id });
       openSnackbar({
         open: true,
         message: 'تم تحديث الحلقة بنجاح',

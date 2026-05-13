@@ -5,6 +5,7 @@ import useSWR, { mutate } from 'swr';
 
 // project-imports
 import axiosServices, { fetcher } from 'utils/axios';
+import { mapCategories, mapCategory } from 'utils/dataMapper';
 
 // ==============================|| API - EPISODE CATEGORIES ||============================== //
 
@@ -33,7 +34,7 @@ export function useGetEpisodeCategories(params = {}) {
 
   const memoizedValue = useMemo(
     () => ({
-      categories: Array.isArray(data) ? data : data?.data || [],
+      categories: mapCategories(Array.isArray(data) ? data : data?.data || []),
       categoriesLoading: isLoading,
       categoriesError: error,
       categoriesMutate: mutateData
@@ -59,7 +60,7 @@ export function useGetEpisodeCategory(id) {
 
   const memoizedValue = useMemo(
     () => ({
-      category: data?.data || null,
+      category: mapCategory(data?.data || null),
       categoryLoading: isLoading,
       categoryError: error,
       categoryMutate: mutateData

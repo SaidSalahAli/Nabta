@@ -82,7 +82,7 @@ function CardBox({ children, sx = {} }) {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        textAlign: 'right',
+        // textAlign: 'right',
         ...sx
       }}
     >

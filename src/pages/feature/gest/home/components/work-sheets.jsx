@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Button, Container, Fade, Typography } from '@mui/material';
-
+import img from 'assets/Home/worksheets.svg';
 export default function Worksheets({ shouldAnimate = false }) {
   const [checked, setChecked] = useState(false);
 
@@ -104,111 +104,10 @@ export default function Worksheets({ shouldAnimate = false }) {
             >
               <Box
                 sx={{
-                  position: 'relative',
-                  width: { xs: 260, sm: 320, md: 360 },
-                  height: { xs: 260, sm: 320, md: 360 }
+                  position: 'relative'
                 }}
               >
-                {/* papers  */}
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    top: 60,
-                    right: 38,
-                    width: 90,
-                    height: 120,
-                    borderRadius: '12px',
-                    backgroundColor: '#fff',
-                    border: '3px solid #3B354A',
-                    transform: 'rotate(16deg)',
-                    zIndex: 1
-                  }}
-                />
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    top: 55,
-                    left: 40,
-                    width: 90,
-                    height: 120,
-                    borderRadius: '12px',
-                    backgroundColor: '#fff',
-                    border: '3px solid #3B354A',
-                    transform: 'rotate(-14deg)',
-                    zIndex: 1
-                  }}
-                />
-
-                {/* main paper */}
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    top: 35,
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    width: { xs: 120, md: 140 },
-                    height: { xs: 160, md: 180 },
-                    borderRadius: '14px',
-                    backgroundColor: '#fff',
-                    border: '3px solid #3B354A',
-                    zIndex: 3,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 1
-                  }}
-                >
-                  <Typography sx={{ fontWeight: 800, fontSize: { xs: 22, md: 26 }, color: '#3B354A' }}>ورقة</Typography>
-                  <Typography sx={{ fontWeight: 800, fontSize: { xs: 22, md: 26 }, color: '#3B354A' }}>عمل</Typography>
-                  <Typography sx={{ fontWeight: 800, fontSize: { xs: 22, md: 26 }, color: '#3B354A' }}>تلوين</Typography>
-                </Box>
-
-                {/* box */}
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    bottom: 35,
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    width: { xs: 220, sm: 250, md: 270 },
-                    height: { xs: 110, sm: 120, md: 130 },
-                    borderRadius: '16px',
-                    background: 'linear-gradient(180deg, #BEEBFF 0%, #9EDDFB 100%)',
-                    border: '4px solid #3B354A',
-                    zIndex: 2
-                  }}
-                />
-
-                {/* front flap */}
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    bottom: 122,
-                    left: 52,
-                    width: 70,
-                    height: 35,
-                    backgroundColor: '#d9f3ff',
-                    border: '4px solid #3B354A',
-                    borderBottom: 'none',
-                    transform: 'skewX(-18deg)',
-                    borderTopLeftRadius: '10px'
-                  }}
-                />
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    bottom: 122,
-                    right: 52,
-                    width: 70,
-                    height: 35,
-                    backgroundColor: '#d9f3ff',
-                    border: '4px solid #3B354A',
-                    borderBottom: 'none',
-                    transform: 'skewX(18deg)',
-                    borderTopRightRadius: '10px'
-                  }}
-                />
+                <img src={img} alt="Worksheets" style={{ width: '100%', height: '100%' }} />
               </Box>
             </Box>
           </Box>

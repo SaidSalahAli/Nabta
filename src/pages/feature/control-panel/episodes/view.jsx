@@ -20,7 +20,8 @@ import Divider from '@mui/material/Divider';
 // project-imports
 import MainCard from 'components/MainCard';
 import Loader from 'components/Loader';
-import { useGetEpisode } from 'api/episodes';
+import { useGetEpisode, deleteEpisode } from 'api/episodes';
+import { openSnackbar } from 'api/snackbar';
 
 // assets
 import { Edit, Trash, DocumentText } from 'iconsax-react';
@@ -32,6 +33,8 @@ export default function ViewEpisode() {
   const navigate = useNavigate();
   const { episode, episodeLoading } = useGetEpisode(id);
   const [openTranscript, setOpenTranscript] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleEditClick = () => {
     navigate(`/episodes/${id}/edit`);
@@ -43,6 +46,36 @@ export default function ViewEpisode() {
 
   const handleTranscriptClose = () => {
     setOpenTranscript(false);
+  };
+
+  const handleDeleteClick = () => {
+    setOpenDeleteDialog(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    setIsDeleting(true);
+    try {
+      await deleteEpisode(id);
+      openSnackbar({
+        open: true,
+        message: 'تم حذف الحلقة بنجاح',
+        variant: 'alert',
+        alert: { color: 'success' }
+      });
+      navigate('/episodes');
+    } catch (error) {
+      openSnackbar({
+        open: true,
+        message: error?.message || 'حدث خطأ في حذف الحلقة',
+        variant: 'alert',
+        alert: { color: 'error' }
+      });
+      setIsDeleting(false);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setOpenDeleteDialog(false);
   };
 
   if (episodeLoading) {
@@ -73,7 +106,7 @@ export default function ViewEpisode() {
             <Button variant="contained" startIcon={<Edit />} onClick={handleEditClick}>
               تحرير
             </Button>
-            <Button variant="outlined" color="error" startIcon={<Trash />}>
+            <Button variant="outlined" color="error" startIcon={<Trash />} onClick={handleDeleteClick}>
               حذف
             </Button>
           </Stack>
@@ -212,6 +245,20 @@ export default function ViewEpisode() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleTranscriptClose}>إغلاق</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={openDeleteDialog} onClose={handleDeleteCancel}>
+        <DialogTitle>تأكيد الحذف</DialogTitle>
+        <DialogContent>
+          <Typography>هل تريد بالتأكيد حذف الحلقة "{episode?.title_ar}"؟ لا يمكن التراجع عن هذا الإجراء.</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteCancel}>إلغاء</Button>
+          <Button onClick={handleDeleteConfirm} variant="contained" color="error" disabled={isDeleting}>
+            {isDeleting ? 'جاري الحذف...' : 'حذف'}
+          </Button>
         </DialogActions>
       </Dialog>
     </Grid>

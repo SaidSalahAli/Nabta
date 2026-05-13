@@ -39,7 +39,7 @@ export default function PartnersReviews({ shouldAnimate = false }) {
               ماذا قالوا عنا؟
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '18px' }}>
-              أراء بعض من شركاؤنا االستراتيجيين من عمًلئنا الكرام في أعمالنا ومنتجاتنا اإلبداعية والتي نفخر بها{' '}
+              أراء بعض من شركاؤنا الاستراتيجيين من عمًلئنا الكرام في أعمالنا ومنتجاتنا اإلبداعية والتي نفخر بها{' '}
             </Typography>
           </Box>
 

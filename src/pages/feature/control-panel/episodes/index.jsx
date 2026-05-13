@@ -27,7 +27,7 @@ import Paper from '@mui/material/Paper';
 // project-imports
 import MainCard from 'components/MainCard';
 import Loader from 'components/Loader';
-import { useGetEpisodes, deleteEpisode } from 'api/episodes';
+import { useGetEpisodes, deleteEpisode, searchEpisodes } from 'api/episodes';
 import { useGetEpisodeCategories } from 'api/episodeCategories';
 import { openSnackbar } from 'api/snackbar';
 
@@ -42,21 +42,69 @@ export default function EpisodesList() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [filterPublished, setFilterPublished] = useState('');
+  const [filterFeatured, setFilterFeatured] = useState('');
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedEpisode, setSelectedEpisode] = useState(null);
+  const [searchResults, setSearchResults] = useState(null);
+  const [isSearching, setIsSearching] = useState(false);
 
   const { episodes = [], episodesLoading, episodesMutate } = useGetEpisodes();
   const { categories = [] } = useGetEpisodeCategories();
 
-  // Filter episodes
+  // Filter episodes - support both old and new field names
   const filteredEpisodes = episodes.filter((episode) => {
-    const matchesSearch = episode.title_ar.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = !selectedCategory || episode.category_id === parseInt(selectedCategory);
-    return matchesSearch && matchesCategory;
+    const title = episode.TitleAr || episode.title_ar || '';
+    const matchesSearch = title.toLowerCase().includes(searchTerm.toLowerCase());
+    const episodeCategoryId = episode.CategoryId || episode.category_id;
+    const matchesCategory = !selectedCategory || String(episodeCategoryId) === String(selectedCategory);
+
+    // Filter by published status
+    const isPublished = episode.is_published;
+    const matchesPublished =
+      filterPublished === '' || (filterPublished === 'true' && isPublished) || (filterPublished === 'false' && !isPublished);
+
+    // Filter by featured status
+    const isFeatured = episode.is_featured;
+    const matchesFeatured =
+      filterFeatured === '' || (filterFeatured === 'true' && isFeatured) || (filterFeatured === 'false' && !isFeatured);
+
+    return matchesSearch && matchesCategory && matchesPublished && matchesFeatured;
   });
 
+  // Handle advanced search
+  const handleSearch = async () => {
+    if (!searchTerm.trim()) {
+      setSearchResults(null);
+      return;
+    }
+
+    setIsSearching(true);
+    try {
+      const searchParams = {
+        title: searchTerm,
+        ...(selectedCategory && { categoryId: parseInt(selectedCategory) })
+      };
+      const results = await searchEpisodes(searchParams);
+      setSearchResults(results);
+      setPage(0);
+    } catch (error) {
+      openSnackbar({
+        open: true,
+        message: 'حدث خطأ في البحث',
+        variant: 'alert',
+        alert: { color: 'error' }
+      });
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  // Determine which episodes to display
+  const displayEpisodes = searchResults !== null ? searchResults : filteredEpisodes;
+
   // Pagination
-  const paginatedEpisodes = filteredEpisodes.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  const paginatedEpisodes = displayEpisodes.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -68,15 +116,15 @@ export default function EpisodesList() {
   };
 
   const handleCreateClick = () => {
-    navigate('/episodes/create');
+    navigate('/dashboard/episodes/create');
   };
 
   const handleViewClick = (id) => {
-    navigate(`/episodes/${id}`);
+    navigate(`/dashboard/episodes/${id}`);
   };
 
   const handleEditClick = (id) => {
-    navigate(`/episodes/${id}/edit`);
+    navigate(`/dashboard/episodes/${id}/edit`);
   };
 
   const handleDeleteClick = (episode) => {
@@ -86,7 +134,7 @@ export default function EpisodesList() {
 
   const handleDeleteConfirm = async () => {
     try {
-      await deleteEpisode(selectedEpisode.id);
+      await deleteEpisode(selectedEpisode.ID || selectedEpisode.id);
       openSnackbar({
         open: true,
         message: 'تم حذف الحلقة بنجاح',
@@ -112,8 +160,8 @@ export default function EpisodesList() {
   };
 
   const getCategoryName = (categoryId) => {
-    const category = categories.find((cat) => cat.id === categoryId);
-    return category?.name_ar || '-';
+    const category = categories.find((cat) => cat.Id === categoryId || cat.id === categoryId);
+    return category?.NameAr || category?.name_ar || '-';
   };
 
   if (episodesLoading) {
@@ -136,7 +184,7 @@ export default function EpisodesList() {
       <Grid size={{ xs: 12 }}>
         <MainCard>
           <Grid container spacing={2}>
-            <Grid size={{ xs: 12, sm: 6 }}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <TextField
                 fullWidth
                 placeholder="بحث عن حلقة..."
@@ -147,7 +195,7 @@ export default function EpisodesList() {
                 }}
               />
             </Grid>
-            <Grid size={{ xs: 12, sm: 6 }}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <TextField
                 select
                 fullWidth
@@ -156,14 +204,46 @@ export default function EpisodesList() {
                   setSelectedCategory(e.target.value);
                   setPage(0);
                 }}
-                placeholder="التصنيف"
+                label="التصنيف"
               >
                 <MenuItem value="">جميع التصنيفات</MenuItem>
                 {categories.map((cat) => (
-                  <MenuItem key={cat.id} value={cat.id}>
-                    {cat.name_ar}
+                  <MenuItem key={cat.Id || cat.id} value={cat.Id || cat.id}>
+                    {cat.NameAr || cat.name_ar}
                   </MenuItem>
                 ))}
+              </TextField>
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+              <TextField
+                select
+                fullWidth
+                value={filterPublished}
+                onChange={(e) => {
+                  setFilterPublished(e.target.value);
+                  setPage(0);
+                }}
+                label="حالة النشر"
+              >
+                <MenuItem value="">الكل</MenuItem>
+                <MenuItem value="true">منشورة</MenuItem>
+                <MenuItem value="false">غير منشورة</MenuItem>
+              </TextField>
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+              <TextField
+                select
+                fullWidth
+                value={filterFeatured}
+                onChange={(e) => {
+                  setFilterFeatured(e.target.value);
+                  setPage(0);
+                }}
+                label="الحلقات المميزة"
+              >
+                <MenuItem value="">الكل</MenuItem>
+                <MenuItem value="true">مميزة</MenuItem>
+                <MenuItem value="false">عادية</MenuItem>
               </TextField>
             </Grid>
           </Grid>
@@ -260,7 +340,7 @@ export default function EpisodesList() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={filteredEpisodes.length}
+            count={displayEpisodes.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

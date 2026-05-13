@@ -49,7 +49,7 @@ export default function Register() {
             <Typography variant="h3">Sign up</Typography>
             <Typography
               component={Link}
-              to={isLoggedIn ? '/auth/login' : '/login'}
+              to={isLoggedIn ? '/auth/login' : '/auth/login'}
               variant="body1"
               sx={{ textDecoration: 'none' }}
               color="primary"

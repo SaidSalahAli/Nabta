@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Container, Typography, Card, CardContent, Fade, Grid } from '@mui/material';
+import workImg from 'assets/Home/Work.svg';
+import KnowledgeImg from 'assets/Home/Knowledge.svg';
+import ExperienceImg from 'assets/Home/Experience.svg';
 
 export default function WhyNabta({ shouldAnimate = false }) {
   const [checked, setChecked] = useState(false);
@@ -14,17 +17,20 @@ export default function WhyNabta({ shouldAnimate = false }) {
     {
       id: 1,
       title: 'العلم',
-      description: 'الاستناد إلى أحدث الأبحاث والدراسات في التربية والتعليم.'
+      description: 'الاستناد إلى أحدث الأبحاث والدراسات في التربية والتعليم.',
+      img: KnowledgeImg
     },
     {
       id: 2,
       title: 'العمل',
-      description: 'تجارب عملية واقعية، ونتائج مجرّبة ومؤثرة.'
+      description: 'تجارب عملية واقعية، ونتائج مجرّبة ومؤثرة.',
+      img: workImg
     },
     {
       id: 3,
       title: 'الخبرة',
-      description: 'فهم احتياجات الأطفال وأولياء الأمور والمعلمين.'
+      description: 'فهم احتياجات الأطفال وأولياء الأمور والمعلمين.',
+      img: ExperienceImg
     }
   ];
 
@@ -116,6 +122,16 @@ export default function WhyNabta({ shouldAnimate = false }) {
                         py: { xs: 2, md: 3 }
                       }}
                     >
+                      <Box
+                        sx={{
+                          width: { xs: 80, sm: 100, md: 120 },
+                          height: { xs: 80, sm: 100, md: 120 },
+                          mb: 2
+                        }}
+                      >
+                        <img src={reason.img} alt={reason.title} style={{ width: '100%', height: '100%' }} />
+                      </Box>
+
                       {/* Title */}
                       <Typography
                         variant="h5"

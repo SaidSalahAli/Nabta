@@ -29,7 +29,7 @@ export default function CreateEpisode() {
         variant: 'alert',
         alert: { color: 'success' }
       });
-      navigate('/episodes');
+      navigate('dashboard/episodes');
     } catch (error) {
       openSnackbar({
         open: true,
@@ -43,7 +43,7 @@ export default function CreateEpisode() {
   };
 
   const handleCancel = () => {
-    navigate('/episodes');
+    navigate('dashboard/episodes');
   };
 
   return (

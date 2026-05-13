@@ -47,11 +47,13 @@ function TopBar({ primaryColor, onClose, isVisible }) {
         py: { xs: 1.5, md: 1.25 },
         display: 'flex',
         alignItems: 'center',
+        backgroundColor: '#FFD666',
+
         justifyContent: 'space-between',
-        gap: { xs: 1.5, md: 2 },
         position: 'relative'
       }}
     >
+      {/* Close Button */}
       <IconButton
         size="small"
         onClick={onClose}
@@ -61,24 +63,51 @@ function TopBar({ primaryColor, onClose, isVisible }) {
           borderColor: 'divider',
           borderRadius: '50%',
           flexShrink: 0,
-          '&:hover': { color: primaryColor, borderColor: primaryColor, bgcolor: 'action.hover' }
+          '&:hover': {
+            color: primaryColor,
+            borderColor: primaryColor,
+            bgcolor: 'action.hover'
+          }
         }}
       >
         X
       </IconButton>
 
-      <Box sx={{ textAlign: 'center', flex: 1, minWidth: 0 }}>
-        <Typography sx={{ fontWeight: 600, fontSize: { xs: 13, md: 20 }, color: 'text.primary', lineHeight: 1.3 }}>
-          تم إطلاق تطبيق لغتي العربية
+      {/* Center Content */}
+      <Box
+        sx={{
+          flex: 1,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: 1.2,
+          minWidth: 0
+        }}
+      >
+        <Typography
+          sx={{
+            fontWeight: 600,
+            fontSize: { xs: 13, md: 20 },
+            color: 'text.primary',
+            lineHeight: 1.3,
+            textAlign: 'center'
+          }}
+        >
+          تم إطلاق تطبيق لغتي العربية , ابدأ مع طفلك اليوم وحمّله الآن
         </Typography>
-        <Typography sx={{ fontWeight: 400, fontSize: { xs: 11, md: 18 }, color: 'text.secondary', lineHeight: 1.2 }}>
-          ابدأ مع طفلك اليوم وحمّله الآن
-        </Typography>
+        <img
+          src={GooglePlay}
+          alt="Google Play"
+          style={{
+            height: '28px',
+            width: 'auto',
+            flexShrink: 0
+          }}
+        />
       </Box>
 
-      <Box sx={{ flexShrink: 0 }}>
-        <img src={GooglePlay} alt="Google Play" style={{ height: '35px', width: 'auto' }} />
-      </Box>
+      {/* Empty spacer for balance */}
+      <Box sx={{ width: 40, flexShrink: 0 }} />
     </Box>
   );
 }
@@ -240,7 +269,7 @@ function BottomBar({ primaryColor }) {
             <Button
               variant="text"
               component={Link}
-              to="/login"
+              to="/auth/login"
               sx={{
                 fontSize: 13,
                 fontWeight: 500,
@@ -257,7 +286,7 @@ function BottomBar({ primaryColor }) {
             <Button
               variant="contained"
               component={Link}
-              to="/login/register"
+              to="/auth/register"
               sx={{
                 fontSize: 13,
                 fontWeight: 600,
@@ -336,7 +365,7 @@ function MobileDrawer({ open, onClose, primaryColor }) {
                 variant="outlined"
                 fullWidth
                 component={Link}
-                to="/login"
+                to="/auth/login"
                 sx={{ textTransform: 'none', borderColor: 'divider', color: 'text.primary' }}
               >
                 دخول
@@ -345,7 +374,7 @@ function MobileDrawer({ open, onClose, primaryColor }) {
                 variant="contained"
                 fullWidth
                 component={Link}
-                to="/login/register"
+                to="/auth/register"
                 sx={{ textTransform: 'none', bgcolor: primaryColor, '&:hover': { bgcolor: primaryColor, opacity: 0.85 } }}
               >
                 تسجيل
