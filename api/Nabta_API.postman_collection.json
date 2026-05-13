@@ -1,0 +1,410 @@
+{
+  "info": {
+    "name": "Nabta Educational Platform API",
+    "description": "Complete API collection for Nabta Educational Platform",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/api/v1/health",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "health"]
+        }
+      }
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "register"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ahmed\",\n  \"email\": \"ahmed@example.com\",\n  \"password\": \"password123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "login"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ahmed@example.com\",\n  \"password\": \"password123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Episodes",
+      "item": [
+        {
+          "name": "List Episodes",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/episodes?page=1&per_page=15",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "episodes"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "per_page", "value": "15" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Featured Episodes",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/episodes/featured?limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "episodes", "featured"],
+              "query": [{ "key": "limit", "value": "10" }]
+            }
+          }
+        },
+        {
+          "name": "Search Episodes",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/episodes/search?q=english&page=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "episodes", "search"],
+              "query": [
+                { "key": "q", "value": "english" },
+                { "key": "page", "value": "1" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Episode by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/episodes/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "episodes", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "List All Categories",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/categories",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "categories"]
+            }
+          }
+        },
+        {
+          "name": "Get Categories by Type",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/categories/episodes",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "categories", "episodes"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Applications",
+      "item": [
+        {
+          "name": "List Applications",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/applications?page=1&per_page=15",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "applications"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "per_page", "value": "15" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Featured Applications",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/applications/featured",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "applications", "featured"]
+            }
+          }
+        },
+        {
+          "name": "Trending Applications",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/applications/trending",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "applications", "trending"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Worksheets",
+      "item": [
+        {
+          "name": "List Worksheets",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/worksheets?page=1&per_page=15",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "worksheets"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "per_page", "value": "15" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Free Worksheets",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/worksheets/free",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "worksheets", "free"]
+            }
+          }
+        },
+        {
+          "name": "Most Downloaded",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/worksheets/trending",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "worksheets", "trending"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Contact & Newsletter",
+      "item": [
+        {
+          "name": "Send Contact Message",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/api/v1/contact",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "contact"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"phone\": \"+966501234567\",\n  \"subject\": \"Inquiry\",\n  \"message\": \"I have a question about your platform\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Subscribe to Newsletter",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/api/v1/newsletter/subscribe",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "newsletter", "subscribe"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"name\": \"User Name\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin - Episodes",
+      "item": [
+        {
+          "name": "Create Episode",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/episodes",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "episodes"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category_id\": 1,\n  \"title_ar\": \"درس الحروف\",\n  \"title_en\": \"Alphabet Lesson\",\n  \"youtube_url\": \"https://www.youtube.com/watch?v=dQw4w9WgXcQ\",\n  \"is_published\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Episode",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/episodes/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "episodes", "1"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title_ar\": \"درس الحروف المحدثة\",\n  \"is_featured\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Episode",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/episodes/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "episodes", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "item": [
+        {
+          "name": "Get Statistics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/dashboard/stats",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "dashboard", "stats"]
+            }
+          }
+        },
+        {
+          "name": "Episodes Chart Data",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/dashboard/charts/episodes",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "dashboard", "charts", "episodes"]
+            }
+          }
+        },
+        {
+          "name": "Recent Items",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/dashboard/recent-items",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "dashboard", "recent-items"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "admin_token",
+      "value": ""
+    }
+  ]
+}

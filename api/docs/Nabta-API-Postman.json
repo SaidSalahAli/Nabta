@@ -1,0 +1,253 @@
+{
+  "info": {
+    "name": "Nabta Educational Platform API",
+    "description": "Complete API collection for Nabta educational platform",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Episodes",
+      "item": [
+        {
+          "name": "Get All Episodes",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/episodes?page=1&per_page=15",
+              "host": ["{{base_url}}"],
+              "path": ["episodes"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "15"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Featured Episodes",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/episodes/featured?limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["episodes", "featured"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Episode by Slug",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/episodes/episode-slug",
+              "host": ["{{base_url}}"],
+              "path": ["episodes", "episode-slug"]
+            }
+          }
+        },
+        {
+          "name": "Create Episode",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title_ar\": \"عنوان الحلقة\",\n  \"title_en\": \"Episode Title\",\n  \"category_id\": 1,\n  \"youtube_url\": \"https://youtube.com/watch?v=...\",\n  \"description_ar\": \"وصف الحلقة\",\n  \"description_en\": \"Episode description\",\n  \"is_published\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/episodes",
+              "host": ["{{base_url}}"],
+              "path": ["episodes"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "Get All Categories",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/categories",
+              "host": ["{{base_url}}"],
+              "path": ["categories"]
+            }
+          }
+        },
+        {
+          "name": "Get Categories by Type",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/categories/episodes",
+              "host": ["{{base_url}}"],
+              "path": ["categories", "episodes"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Applications",
+      "item": [
+        {
+          "name": "Get All Applications",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/applications?page=1&per_page=15",
+              "host": ["{{base_url}}"],
+              "path": ["applications"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "15"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Featured Applications",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/applications/featured",
+              "host": ["{{base_url}}"],
+              "path": ["applications", "featured"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Worksheets",
+      "item": [
+        {
+          "name": "Get All Worksheets",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/worksheets?page=1&per_page=15",
+              "host": ["{{base_url}}"],
+              "path": ["worksheets"]
+            }
+          }
+        },
+        {
+          "name": "Get Free Worksheets",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/worksheets/free",
+              "host": ["{{base_url}}"],
+              "path": ["worksheets", "free"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api/v1"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ]
+}
