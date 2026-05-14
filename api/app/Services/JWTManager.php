@@ -23,9 +23,9 @@ class JWTManager
 
     public function __construct()
     {
-        $this->secret = getenv('JWT_SECRET') ?: 'your-secret-key-change-in-production';
-        $this->expiration = (int)getenv('JWT_EXPIRATION') ?: 3600; // 1 hour
-        $this->refreshExpiration = (int)getenv('JWT_REFRESH_EXPIRATION') ?: 604800; // 7 days
+        $this->secret = \Nabta\Config\Config::get('JWT_SECRET', 'your-secret-key-change-in-production');
+        $this->expiration = (int)\Nabta\Config\Config::get('JWT_EXPIRATION', 3600);
+        $this->refreshExpiration = (int)\Nabta\Config\Config::get('JWT_REFRESH_EXPIRATION', 604800);
         $this->blacklistModel = new TokenBlacklist();
         $this->refreshTokenModel = new RefreshToken();
     }

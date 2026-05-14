@@ -81,7 +81,7 @@ class AuthService
      */
     public function login(string $email, string $password): array
     {
-        $user = $this->userModel->findByEmail($email);
+        $user = $this->userModel->findByEmailWithRole($email);
 
         if (!$user || !Helpers\verifyPassword($password, $user['password'])) {
             Helpers\logInfo('Failed login attempt', ['email' => $email]);
@@ -165,7 +165,7 @@ class AuthService
      */
     public function getUserById(int $userId): ?array
     {
-        $user = $this->userModel->find($userId);
+        $user = $this->userModel->findWithRole($userId);
         if ($user) {
             unset($user['password']);
         }
@@ -183,7 +183,7 @@ class AuthService
         $updateData['updated_at'] = Helpers\getCurrentTimestamp();
 
         if ($this->userModel->update($userId, $updateData)) {
-            $user = $this->userModel->find($userId);
+            $user = $this->userModel->findWithRole($userId);
             unset($user['password']);
             return [
                 'success' => true,
@@ -204,7 +204,7 @@ class AuthService
      */
     public function changePassword(int $userId, string $oldPassword, string $newPassword): array
     {
-        $user = $this->userModel->find($userId);
+        $user = $this->userModel->findWithRole($userId);
 
         if (!$user || !Helpers\verifyPassword($oldPassword, $user['password'])) {
             return [
@@ -265,7 +265,7 @@ class AuthService
                 return null;
             }
 
-            $user = $this->userModel->find($decoded['sub']);
+            $user = $this->userModel->findWithRole($decoded['sub']);
             if (!$user) {
                 return null;
             }

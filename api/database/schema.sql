@@ -162,6 +162,7 @@ CREATE TABLE IF NOT EXISTS `episodes` (
     `id` INT PRIMARY KEY AUTO_INCREMENT,
     `category_id` INT NOT NULL,
     `series_id` INT,
+    `episode_number` INT DEFAULT NULL,
     `title_ar` VARCHAR(255) NOT NULL,
     `title_en` VARCHAR(255) NOT NULL,
     `slug` VARCHAR(255) NOT NULL UNIQUE,
@@ -169,11 +170,17 @@ CREATE TABLE IF NOT EXISTS `episodes` (
     `short_description_en` VARCHAR(500),
     `description_ar` TEXT,
     `description_en` TEXT,
-    `thumbnail_url` VARCHAR(500),
-    `youtube_url` VARCHAR(500) NOT NULL,
+    `transcript_ar` LONGTEXT,
+    `transcript_en` LONGTEXT,
+    `cover_image` VARCHAR(500),
+    `thumbnail_image` VARCHAR(500),
+    `video_url` VARCHAR(500) NOT NULL,
+    `video_type` ENUM('youtube', 'vimeo', 'mp4', 'stream') DEFAULT 'youtube',
     `author` VARCHAR(255),
     `duration_seconds` INT,
+    `sort_order` INT DEFAULT 0,
     `views_count` INT DEFAULT 0,
+    `has_worksheets` BOOLEAN DEFAULT FALSE,
     `is_featured` BOOLEAN DEFAULT FALSE,
     `is_published` BOOLEAN DEFAULT FALSE,
     `published_at` TIMESTAMP NULL,
@@ -189,6 +196,7 @@ CREATE TABLE IF NOT EXISTS `episodes` (
     INDEX `idx_slug` (`slug`),
     INDEX `idx_is_published` (`is_published`),
     INDEX `idx_is_featured` (`is_featured`),
+    INDEX `idx_sort_order` (`sort_order`),
     FULLTEXT INDEX `ft_search` (`title_ar`, `title_en`, `description_ar`, `description_en`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -590,3 +598,22 @@ ALTER TABLE `applications` ADD INDEX `idx_category_published` (`category_id`, `i
 ALTER TABLE `worksheets` ADD INDEX `idx_category_published` (`category_id`, `is_published`);
 ALTER TABLE `user_sessions` ADD INDEX `idx_user_expires` (`user_id`, `expires_at`);
 ALTER TABLE `login_logs` ADD INDEX `idx_email_created` (`email`, `created_at`);
+
+-- ============================================================
+-- MIGRATION: Add new columns to episodes table (if already exists)
+-- Run these if the table was already created with the old schema
+-- ============================================================
+
+-- ALTER TABLE `episodes`
+--     ADD COLUMN `episode_number` INT DEFAULT NULL AFTER `series_id`,
+--     ADD COLUMN `transcript_ar` LONGTEXT AFTER `description_en`,
+--     ADD COLUMN `transcript_en` LONGTEXT AFTER `transcript_ar`,
+--     ADD COLUMN `cover_image` VARCHAR(500) AFTER `transcript_en`,
+--     ADD COLUMN `thumbnail_image` VARCHAR(500) AFTER `cover_image`,
+--     ADD COLUMN `video_url` VARCHAR(500) NOT NULL DEFAULT '' AFTER `thumbnail_image`,
+--     ADD COLUMN `video_type` ENUM('youtube','vimeo','mp4','stream') DEFAULT 'youtube' AFTER `video_url`,
+--     ADD COLUMN `sort_order` INT DEFAULT 0 AFTER `duration_seconds`,
+--     ADD COLUMN `has_worksheets` BOOLEAN DEFAULT FALSE AFTER `views_count`,
+--     ADD INDEX `idx_sort_order` (`sort_order`);
+-- (Uncomment and run the above if migrating an existing database)
+

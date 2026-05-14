@@ -47,19 +47,19 @@ class ApiRoutes
         $router->get('/api/v1/episodes/{id}/related', [EpisodeController::class, 'related']);
 
         // Admin Episodes
-        $router->post('/api/v1/admin/episodes', [EpisodeController::class, 'create']);
+        $router->post('/api/v1/admin/episodes', [EpisodeController::class, 'store']);
         $router->put('/api/v1/admin/episodes/{id}', [EpisodeController::class, 'update']);
-        $router->delete('/api/v1/admin/episodes/{id}', [EpisodeController::class, 'delete']);
+        $router->delete('/api/v1/admin/episodes/{id}', [EpisodeController::class, 'destroy']);
 
         // ===== CATEGORIES ROUTES =====
         $router->get('/api/v1/categories', [CategoryController::class, 'index']);
-        $router->get('/api/v1/categories/{type}', [CategoryController::class, 'byType']);
+        $router->get('/api/v1/categories/{type}', [CategoryController::class, 'getByType']);
         $router->get('/api/v1/categories/{id}/with-counts', [CategoryController::class, 'withCounts']);
 
         // Admin Categories
-        $router->post('/api/v1/admin/categories', [CategoryController::class, 'create']);
+        $router->post('/api/v1/admin/categories', [CategoryController::class, 'store']);
         $router->put('/api/v1/admin/categories/{id}', [CategoryController::class, 'update']);
-        $router->delete('/api/v1/admin/categories/{id}', [CategoryController::class, 'delete']);
+        $router->delete('/api/v1/admin/categories/{id}', [CategoryController::class, 'destroy']);
 
         // ===== APPLICATIONS ROUTES =====
         $router->get('/api/v1/applications', [ApplicationController::class, 'index']);
@@ -71,9 +71,9 @@ class ApiRoutes
         $router->get('/api/v1/applications/{slug}/slug', [ApplicationController::class, 'showBySlug']);
 
         // Admin Applications
-        $router->post('/api/v1/admin/applications', [ApplicationController::class, 'create']);
+        $router->post('/api/v1/admin/applications', [ApplicationController::class, 'store']);
         $router->put('/api/v1/admin/applications/{id}', [ApplicationController::class, 'update']);
-        $router->delete('/api/v1/admin/applications/{id}', [ApplicationController::class, 'delete']);
+        $router->delete('/api/v1/admin/applications/{id}', [ApplicationController::class, 'destroy']);
         $router->post('/api/v1/admin/applications/{id}/gallery', [ApplicationController::class, 'addGallery']);
 
         // ===== WORKSHEETS ROUTES =====
@@ -88,13 +88,13 @@ class ApiRoutes
         $router->post('/api/v1/worksheets/{id}/download', [WorksheetController::class, 'download']);
 
         // Admin Worksheets
-        $router->post('/api/v1/admin/worksheets', [WorksheetController::class, 'create']);
+        $router->post('/api/v1/admin/worksheets', [WorksheetController::class, 'store']);
         $router->put('/api/v1/admin/worksheets/{id}', [WorksheetController::class, 'update']);
-        $router->delete('/api/v1/admin/worksheets/{id}', [WorksheetController::class, 'delete']);
+        $router->delete('/api/v1/admin/worksheets/{id}', [WorksheetController::class, 'destroy']);
 
         // ===== MEDIA ROUTES =====
         $router->post('/api/v1/media/upload', [MediaController::class, 'upload']);
-        $router->delete('/api/v1/admin/media/{id}', [MediaController::class, 'delete']);
+        $router->delete('/api/v1/admin/media/{id}', [MediaController::class, 'destroy']);
         $router->get('/api/v1/admin/media', [MediaController::class, 'index']);
 
         // ===== CONTACT & NEWSLETTER =====
@@ -107,7 +107,7 @@ class ApiRoutes
         $router->put('/api/v1/admin/settings/{key}', [SettingsController::class, 'update']);
 
         $router->get('/api/v1/seo/{slug}', [SeoController::class, 'getBySlug']);
-        $router->post('/api/v1/admin/seo', [SeoController::class, 'create']);
+        $router->post('/api/v1/admin/seo', [SeoController::class, 'store']);
         $router->put('/api/v1/admin/seo/{id}', [SeoController::class, 'update']);
 
         // ===== DASHBOARD ROUTES =====

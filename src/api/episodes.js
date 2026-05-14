@@ -10,35 +10,35 @@ import { mapEpisodes, mapEpisode } from 'utils/dataMapper';
 // ==============================|| API - EPISODES ||============================== //
 
 const endpoints = {
-  key: 'api/Episodes',
-  list: 'api/Episodes/List',
-  create: 'api/Episodes/Add',
-  read: (id) => `api/Episodes/GetById?id=${id}`,
-  update: 'api/Episodes/Update',
-  delete: (id) => `api/Episodes/Delete?id=${id}`,
-  byCategory: (categoryId) => `api/Episodes/ByCategory?categoryId=${categoryId}`,
-  search: 'api/Episodes/search'
+  key: 'v1/episodes',
+  list: 'v1/episodes',
+  create: 'v1/admin/episodes',
+  read: (id) => `v1/episodes/${id}`,
+  update: (id) => `v1/admin/episodes/${id}`,
+  delete: (id) => `v1/admin/episodes/${id}`,
+  byCategory: (categoryId) => `v1/episodes/category/${categoryId}`,
+  search: 'v1/episodes/search'
 };
 
 // Convert local field names to API field names (snake_case to PascalCase)
 const convertToApiFormat = (episodeData) => {
   const apiData = {
-    ID: episodeData.ID || episodeData.id,
-    CategoryId: episodeData.category_id || episodeData.CategoryId,
-    TitleAr: episodeData.title_ar || episodeData.TitleAr,
-    ShortDescriptionAr: episodeData.short_description_ar || episodeData.ShortDescriptionAr,
-    DescriptionAr: episodeData.description_ar || episodeData.DescriptionAr,
-    VideoUrl: episodeData.video_url || episodeData.VideoUrl,
-    VideoType: episodeData.video_type || episodeData.VideoType,
-    EpisodeNumber: episodeData.episode_number || episodeData.EpisodeNumber,
-    DurationSeconds: episodeData.duration_seconds || episodeData.DurationSeconds,
-    IsFeatured:
+    id: episodeData.id || episodeData.ID,
+    category_id: episodeData.category_id || episodeData.CategoryId,
+    title_ar: episodeData.title_ar || episodeData.TitleAr,
+    short_description_ar: episodeData.short_description_ar || episodeData.ShortDescriptionAr,
+    description_ar: episodeData.description_ar || episodeData.DescriptionAr,
+    video_url: episodeData.video_url || episodeData.VideoUrl,
+    video_type: episodeData.video_type || episodeData.VideoType,
+    episode_number: episodeData.episode_number || episodeData.EpisodeNumber,
+    duration_seconds: episodeData.duration_seconds || episodeData.DurationSeconds,
+    is_featured:
       episodeData.is_featured !== undefined
         ? episodeData.is_featured
         : episodeData.IsFeatured !== undefined
           ? episodeData.IsFeatured
           : false,
-    HasWorksheets:
+    has_worksheets:
       episodeData.has_worksheets !== undefined
         ? episodeData.has_worksheets
         : episodeData.HasWorksheets !== undefined
@@ -48,35 +48,35 @@ const convertToApiFormat = (episodeData) => {
 
   // Add optional fields only if they have values
   if (episodeData.title_en || episodeData.TitleEn) {
-    apiData.TitleEn = episodeData.title_en || episodeData.TitleEn;
+    apiData.title_en = episodeData.title_en || episodeData.TitleEn;
   }
 
   if (episodeData.short_description_en || episodeData.ShortDescriptionEn) {
-    apiData.ShortDescriptionEn = episodeData.short_description_en || episodeData.ShortDescriptionEn;
+    apiData.short_description_en = episodeData.short_description_en || episodeData.ShortDescriptionEn;
   }
 
   if (episodeData.description_en || episodeData.DescriptionEn) {
-    apiData.DescriptionEn = episodeData.description_en || episodeData.DescriptionEn;
+    apiData.description_en = episodeData.description_en || episodeData.DescriptionEn;
   }
 
   if (episodeData.thumbnail_image || episodeData.ThumbnailImage) {
-    apiData.ThumbnailImage = episodeData.thumbnail_image || episodeData.ThumbnailImage;
+    apiData.thumbnail_image = episodeData.thumbnail_image || episodeData.ThumbnailImage;
   }
 
   if (episodeData.cover_image || episodeData.CoverImage) {
-    apiData.CoverImage = episodeData.cover_image || episodeData.CoverImage;
+    apiData.cover_image = episodeData.cover_image || episodeData.CoverImage;
   }
 
   if (episodeData.transcript_ar || episodeData.TranscriptAr) {
-    apiData.TranscriptAr = episodeData.transcript_ar || episodeData.TranscriptAr;
+    apiData.transcript_ar = episodeData.transcript_ar || episodeData.TranscriptAr;
   }
 
   if (episodeData.transcript_en || episodeData.TranscriptEn) {
-    apiData.TranscriptEn = episodeData.transcript_en || episodeData.TranscriptEn;
+    apiData.transcript_en = episodeData.transcript_en || episodeData.TranscriptEn;
   }
 
   if (episodeData.published_at || episodeData.PublishedAt) {
-    apiData.PublishedAt = episodeData.published_at || episodeData.PublishedAt;
+    apiData.published_at = episodeData.published_at || episodeData.PublishedAt;
   }
 
   return apiData;
@@ -147,12 +147,12 @@ export async function createEpisode(episodeData) {
 }
 
 // Update episode
-export async function updateEpisode(episodeData) {
+export async function updateEpisode(id, episodeData) {
   try {
     const apiData = convertToApiFormat(episodeData);
-    const response = await axiosServices.put(endpoints.update, apiData);
+    const response = await axiosServices.put(endpoints.update(id), apiData);
     mutate(endpoints.key);
-    mutate(endpoints.read(apiData.ID));
+    mutate(endpoints.read(id));
     return response.data;
   } catch (error) {
     return Promise.reject((error.response && error.response.data) || 'Error updating episode');

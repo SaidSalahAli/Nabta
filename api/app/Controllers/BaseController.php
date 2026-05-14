@@ -173,12 +173,16 @@ abstract class BaseController
         }
 
         try {
+            $secret = \Nabta\Config\Config::get('JWT_SECRET', 'your-secret-key-change-in-production');
+            $algo = \Nabta\Config\Config::get('JWT_ALGORITHM', 'HS256');
+            
             $decoded = JWT::decode(
                 $token,
-                new Key(getenv('JWT_SECRET'), 'HS256')
+                new Key($secret, $algo)
             );
             return $decoded->sub ?? null;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
+            \Nabta\Helpers\logError('JWT Decode Error: ' . $e->getMessage());
             return null;
         }
     }
@@ -188,9 +192,20 @@ abstract class BaseController
      */
     protected function getBearerToken(): ?string
     {
-        $header = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+        $header = null;
+        
+        if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+            $header = $_SERVER['HTTP_AUTHORIZATION'];
+        } elseif (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
+            $header = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+        } elseif (function_exists('apache_request_headers')) {
+            $headers = apache_request_headers();
+            if (isset($headers['Authorization'])) {
+                $header = $headers['Authorization'];
+            }
+        }
 
-        if (preg_match('/^Bearer\s+(.*)$/', $header, $matches)) {
+        if ($header && preg_match('/^Bearer\s+(.*)$/', $header, $matches)) {
             return $matches[1];
         }
 

@@ -64,69 +64,82 @@ $routes = [
     'POST:/auth/logout'           => ['controller' => 'AuthController',        'action' => 'logout'],
     'POST:/auth/google'           => ['controller' => 'AuthController',        'action' => 'googleLogin'],
 
-    // Episode routes
-    'GET:/episodes'                        => ['controller' => 'EpisodeController', 'action' => 'index'],
-    'GET:/episodes/featured'               => ['controller' => 'EpisodeController', 'action' => 'featured'],
-    'GET:/episodes/search'                 => ['controller' => 'EpisodeController', 'action' => 'search'],
-    'POST:/episodes'                       => ['controller' => 'EpisodeController', 'action' => 'store'],
-    'GET:/episodes/{slug}'                 => ['controller' => 'EpisodeController', 'action' => 'show',           'params' => ['slug']],
-    'GET:/categories/{categoryId}/episodes'=> ['controller' => 'EpisodeController', 'action' => 'byCategory',     'params' => ['categoryId']],
-    'PUT:/episodes/{id}'                   => ['controller' => 'EpisodeController', 'action' => 'update',         'params' => ['id']],
-    'DELETE:/episodes/{id}'                => ['controller' => 'EpisodeController', 'action' => 'destroy',        'params' => ['id']],
-    'GET:/series/{seriesId}/episodes'      => ['controller' => 'EpisodeController', 'action' => 'seriesEpisodes', 'params' => ['seriesId']],
+    // ===== EPISODE ROUTES =====
+    'GET:/episodes'                         => ['controller' => 'EpisodeController', 'action' => 'index'],
+    'GET:/episodes/featured'                => ['controller' => 'EpisodeController', 'action' => 'featured'],
+    'GET:/episodes/search'                  => ['controller' => 'EpisodeController', 'action' => 'search'],
+    'GET:/episodes/{slug}'                  => ['controller' => 'EpisodeController', 'action' => 'show',           'params' => ['slug']],
+    'GET:/categories/{categoryId}/episodes' => ['controller' => 'EpisodeController', 'action' => 'byCategory',     'params' => ['categoryId']],
+    'GET:/series/{seriesId}/episodes'       => ['controller' => 'EpisodeController', 'action' => 'seriesEpisodes', 'params' => ['seriesId']],
 
-    // Category routes
-    'GET:/categories'        => ['controller' => 'CategoryController', 'action' => 'index'],
-    'GET:/categories/{type}' => ['controller' => 'CategoryController', 'action' => 'getByType', 'params' => ['type']],
-    'POST:/categories'       => ['controller' => 'CategoryController', 'action' => 'store'],
-    'PUT:/categories/{id}'   => ['controller' => 'CategoryController', 'action' => 'update',    'params' => ['id']],
-    'DELETE:/categories/{id}'=> ['controller' => 'CategoryController', 'action' => 'destroy',   'params' => ['id']],
+    // Admin Episode routes
+    'POST:/admin/episodes'        => ['controller' => 'EpisodeController', 'action' => 'store'],
+    'PUT:/admin/episodes/{id}'    => ['controller' => 'EpisodeController', 'action' => 'update',  'params' => ['id']],
+    'DELETE:/admin/episodes/{id}' => ['controller' => 'EpisodeController', 'action' => 'destroy', 'params' => ['id']],
 
-    // Application routes
+    // ===== CATEGORY ROUTES =====
+    'GET:/categories'         => ['controller' => 'CategoryController', 'action' => 'index'],
+    'GET:/categories/{type}'  => ['controller' => 'CategoryController', 'action' => 'getByType', 'params' => ['type']],
+
+    // Admin Category routes
+    'POST:/admin/categories'        => ['controller' => 'CategoryController', 'action' => 'store'],
+    'PUT:/admin/categories/{id}'    => ['controller' => 'CategoryController', 'action' => 'update',  'params' => ['id']],
+    'DELETE:/admin/categories/{id}' => ['controller' => 'CategoryController', 'action' => 'destroy', 'params' => ['id']],
+
+    // ===== APPLICATION ROUTES =====
     'GET:/applications'          => ['controller' => 'ApplicationController', 'action' => 'index'],
     'GET:/applications/featured' => ['controller' => 'ApplicationController', 'action' => 'featured'],
     'GET:/applications/search'   => ['controller' => 'ApplicationController', 'action' => 'search'],
     'GET:/applications/{slug}'   => ['controller' => 'ApplicationController', 'action' => 'show',    'params' => ['slug']],
-    'POST:/applications'         => ['controller' => 'ApplicationController', 'action' => 'store'],
-    'PUT:/applications/{id}'     => ['controller' => 'ApplicationController', 'action' => 'update',  'params' => ['id']],
-    'DELETE:/applications/{id}'  => ['controller' => 'ApplicationController', 'action' => 'destroy', 'params' => ['id']],
 
-    // Worksheet routes
-    'GET:/worksheets'               => ['controller' => 'WorksheetController', 'action' => 'index'],
-    'GET:/worksheets/free'          => ['controller' => 'WorksheetController', 'action' => 'free'],
-    'GET:/worksheets/search'        => ['controller' => 'WorksheetController', 'action' => 'search'],
-    'GET:/worksheets/{slug}'        => ['controller' => 'WorksheetController', 'action' => 'show',     'params' => ['slug']],
-    'POST:/worksheets/{id}/download'=> ['controller' => 'WorksheetController', 'action' => 'download', 'params' => ['id']],
-    'POST:/worksheets'              => ['controller' => 'WorksheetController', 'action' => 'store'],
-    'PUT:/worksheets/{id}'          => ['controller' => 'WorksheetController', 'action' => 'update',   'params' => ['id']],
-    'DELETE:/worksheets/{id}'       => ['controller' => 'WorksheetController', 'action' => 'destroy',  'params' => ['id']],
+    // Admin Application routes
+    'POST:/admin/applications'        => ['controller' => 'ApplicationController', 'action' => 'store'],
+    'PUT:/admin/applications/{id}'    => ['controller' => 'ApplicationController', 'action' => 'update',  'params' => ['id']],
+    'DELETE:/admin/applications/{id}' => ['controller' => 'ApplicationController', 'action' => 'destroy', 'params' => ['id']],
+    'POST:/admin/applications/{id}/gallery' => ['controller' => 'ApplicationController', 'action' => 'addGallery', 'params' => ['id']],
 
-    // Media routes
-    'POST:/media/upload'  => ['controller' => 'MediaController', 'action' => 'upload'],
-    'GET:/media/{id}'     => ['controller' => 'MediaController', 'action' => 'show',   'params' => ['id']],
-    'DELETE:/media/{id}'  => ['controller' => 'MediaController', 'action' => 'delete', 'params' => ['id']],
+    // ===== WORKSHEET ROUTES =====
+    'GET:/worksheets'                => ['controller' => 'WorksheetController', 'action' => 'index'],
+    'GET:/worksheets/free'           => ['controller' => 'WorksheetController', 'action' => 'free'],
+    'GET:/worksheets/search'         => ['controller' => 'WorksheetController', 'action' => 'search'],
+    'GET:/worksheets/{slug}'         => ['controller' => 'WorksheetController', 'action' => 'show',     'params' => ['slug']],
+    'POST:/worksheets/{id}/download' => ['controller' => 'WorksheetController', 'action' => 'download', 'params' => ['id']],
 
-    // Settings routes
-    'GET:/settings'        => ['controller' => 'SettingsController', 'action' => 'getAll'],
-    'GET:/settings/{key}'  => ['controller' => 'SettingsController', 'action' => 'get',    'params' => ['key']],
-    'PUT:/settings/{key}'  => ['controller' => 'SettingsController', 'action' => 'update', 'params' => ['key']],
+    // Admin Worksheet routes
+    'POST:/admin/worksheets'        => ['controller' => 'WorksheetController', 'action' => 'store'],
+    'PUT:/admin/worksheets/{id}'    => ['controller' => 'WorksheetController', 'action' => 'update',  'params' => ['id']],
+    'DELETE:/admin/worksheets/{id}' => ['controller' => 'WorksheetController', 'action' => 'destroy', 'params' => ['id']],
 
-    // Contact routes
-    'POST:/contact'          => ['controller' => 'ContactController', 'action' => 'store'],
-    'GET:/contact/messages'  => ['controller' => 'ContactController', 'action' => 'index'],
+    // ===== MEDIA ROUTES =====
+    'POST:/media/upload'         => ['controller' => 'MediaController', 'action' => 'upload'],
+    'GET:/media/{id}'            => ['controller' => 'MediaController', 'action' => 'show',    'params' => ['id']],
+    'DELETE:/admin/media/{id}'   => ['controller' => 'MediaController', 'action' => 'destroy', 'params' => ['id']],
+    'GET:/admin/media'           => ['controller' => 'MediaController', 'action' => 'index'],
 
-    // Newsletter routes
+    // ===== SETTINGS ROUTES =====
+    'GET:/settings'           => ['controller' => 'SettingsController', 'action' => 'getAll'],
+    'GET:/settings/{key}'     => ['controller' => 'SettingsController', 'action' => 'get',    'params' => ['key']],
+    'PUT:/admin/settings/{key}' => ['controller' => 'SettingsController', 'action' => 'update', 'params' => ['key']],
+
+    // ===== CONTACT ROUTES =====
+    'POST:/contact'         => ['controller' => 'ContactController', 'action' => 'store'],
+    'GET:/contact/messages' => ['controller' => 'ContactController', 'action' => 'index'],
+
+    // ===== NEWSLETTER ROUTES =====
     'POST:/newsletter/subscribe'   => ['controller' => 'NewsletterController', 'action' => 'subscribe'],
     'POST:/newsletter/unsubscribe' => ['controller' => 'NewsletterController', 'action' => 'unsubscribe'],
 
-    // Dashboard routes
-    'GET:/dashboard/stats'     => ['controller' => 'DashboardController', 'action' => 'stats'],
-    'GET:/dashboard/analytics' => ['controller' => 'DashboardController', 'action' => 'analytics'],
+    // ===== DASHBOARD ROUTES =====
+    'GET:/admin/dashboard/stats'            => ['controller' => 'DashboardController', 'action' => 'stats'],
+    'GET:/admin/dashboard/analytics'        => ['controller' => 'DashboardController', 'action' => 'analytics'],
+    'GET:/admin/dashboard/charts/episodes'  => ['controller' => 'DashboardController', 'action' => 'episodesChart'],
+    'GET:/admin/dashboard/charts/downloads' => ['controller' => 'DashboardController', 'action' => 'downloadsChart'],
+    'GET:/admin/dashboard/recent-items'     => ['controller' => 'DashboardController', 'action' => 'recentItems'],
 
-    // SEO routes
-    'GET:/seo/pages'      => ['controller' => 'SeoController', 'action' => 'getPages'],
-    'POST:/seo/pages'     => ['controller' => 'SeoController', 'action' => 'createPage'],
-    'PUT:/seo/pages/{id}' => ['controller' => 'SeoController', 'action' => 'updatePage', 'params' => ['id']],
+    // ===== SEO ROUTES =====
+    'GET:/seo/{slug}'      => ['controller' => 'SeoController', 'action' => 'getBySlug', 'params' => ['slug']],
+    'POST:/admin/seo'      => ['controller' => 'SeoController', 'action' => 'store'],
+    'PUT:/admin/seo/{id}'  => ['controller' => 'SeoController', 'action' => 'update', 'params' => ['id']],
 
     // Health check
     'GET:/' => ['controller' => 'HealthController', 'action' => 'check'],

@@ -94,13 +94,13 @@ class EpisodeService
     public function create(array $data): array
     {
         // Validate required fields
-        $required = ['title_ar', 'title_en', 'category_id', 'youtube_url'];
+        $required = ['title_ar', 'title_en', 'category_id', 'video_url'];
         foreach ($required as $field) {
             if (empty($data[$field])) {
                 return [
                     'success' => false,
                     'message' => "Field {$field} is required",
-                    'errors' => null
+                    'errors'  => null
                 ];
             }
         }

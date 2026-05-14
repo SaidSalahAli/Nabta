@@ -7,7 +7,7 @@ namespace Nabta\Helpers;
  */
 function logError(string $message, array $context = []): void
 {
-    $logDir = dirname(__DIR__) . '/storage/logs';
+    $logDir = getLogsPath();
     if (!is_dir($logDir)) {
         mkdir($logDir, 0755, true);
     }
@@ -22,7 +22,7 @@ function logError(string $message, array $context = []): void
 
 function logInfo(string $message, array $context = []): void
 {
-    $logDir = dirname(__DIR__) . '/storage/logs';
+    $logDir = getLogsPath();
     if (!is_dir($logDir)) {
         mkdir($logDir, 0755, true);
     }
@@ -200,17 +200,18 @@ function getPaginationData(int $currentPage, int $totalItems, int $perPage = 15)
  */
 function getProjectRoot(): string
 {
+    // If helpers.php is in api/app/Helpers, then dirname(dirname(__DIR__)) is the api folder
     return dirname(dirname(__DIR__));
 }
 
 function getStoragePath(): string
 {
-    return getProjectRoot() . '/api/storage';
+    return getProjectRoot() . '/storage';
 }
 
 function getUploadsPath(): string
 {
-    return getStoragePath() . '/uploads';
+    return getProjectRoot() . '/public/uploads';
 }
 
 function getLogsPath(): string

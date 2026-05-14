@@ -27,11 +27,31 @@ class User extends BaseModel
     protected array $hidden = ['password'];
 
     /**
-     * Find user by email
+     * Find user by email with role
      */
-    public function findByEmail(string $email)
+    public function findByEmailWithRole(string $email)
     {
-        return $this->where('email', '=', $email)[0] ?? null;
+        $sql = "SELECT u.*, r.name as role 
+                FROM {$this->table} u 
+                LEFT JOIN user_roles ur ON u.id = ur.user_id 
+                LEFT JOIN roles r ON ur.role_id = r.id 
+                WHERE u.email = :email 
+                LIMIT 1";
+        return $this->db->fetch($sql, ['email' => $email]);
+    }
+
+    /**
+     * Find user by ID with role
+     */
+    public function findWithRole(int $id)
+    {
+        $sql = "SELECT u.*, r.name as role 
+                FROM {$this->table} u 
+                LEFT JOIN user_roles ur ON u.id = ur.user_id 
+                LEFT JOIN roles r ON ur.role_id = r.id 
+                WHERE u.{$this->primaryKey} = :id 
+                LIMIT 1";
+        return $this->db->fetch($sql, ['id' => $id]);
     }
 
     /**

@@ -95,7 +95,7 @@ class MediaService
         $mediaData = [
             'user_id' => $userId,
             'file_name' => $file['name'],
-            'file_path' => '/uploads/' . $fileType . '/' . $filename,
+            'file_path' => '/public/uploads/' . $fileType . '/' . $filename,
             'mime_type' => $file['type'],
             'file_size' => $file['size'],
             'file_type' => $fileType,

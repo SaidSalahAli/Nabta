@@ -13,7 +13,14 @@ export const mapCategory = (category) => {
     name_en: category.NameEn || category.name_en,
     description_ar: category.DescriptionAr || category.description_ar,
     description_en: category.DescriptionEn || category.description_en,
-    image: category.Image || category.image,
+    icon_url: category.IconUrl || category.icon_url || category.Image || category.image,
+    color_code: category.ColorCode || category.color_code,
+    display_order: category.DisplayOrder ?? category.display_order ?? 0,
+    is_active: category.IsActive !== undefined ? Boolean(category.IsActive) : category.is_active !== undefined ? Boolean(category.is_active) : true,
+    type: category.Type || category.type,
+    slug: category.Slug || category.slug,
+    created_at: category.CreatedAt || category.created_at,
+    updated_at: category.UpdatedAt || category.updated_at,
     // Keep original for reference
     ...category
   };

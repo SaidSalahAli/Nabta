@@ -22,28 +22,34 @@ export default function CreateEpisode() {
   const handleSubmit = async (values) => {
     setIsLoading(true);
     try {
-      await createEpisode(values);
+      const response = await createEpisode(values);
       openSnackbar({
         open: true,
         message: 'تم إنشاء الحلقة بنجاح',
         variant: 'alert',
         alert: { color: 'success' }
       });
-      navigate('dashboard/episodes');
+      // Navigate after a brief delay to show success message
+      setTimeout(() => {
+        navigate('/dashboard/episodes');
+      }, 1500);
+      return response;
     } catch (error) {
+      const errorMessage = error?.message || 'حدث خطأ في إنشاء الحلقة';
       openSnackbar({
         open: true,
-        message: error?.message || 'حدث خطأ في إنشاء الحلقة',
+        message: errorMessage,
         variant: 'alert',
         alert: { color: 'error' }
       });
+      throw error;
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleCancel = () => {
-    navigate('dashboard/episodes');
+    navigate('/dashboard/episodes');
   };
 
   return (

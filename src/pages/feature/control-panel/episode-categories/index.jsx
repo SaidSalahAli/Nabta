@@ -46,10 +46,11 @@ export default function EpisodeCategories() {
 
   const { categories = [], categoriesLoading, categoriesMutate } = useGetEpisodeCategories();
 
-  // Filter categories - support both old and new field names
+  // Filter categories
   const filteredCategories = categories.filter((category) =>
-    (category.NameAr || category.nameAr || category.name_ar || '').toLowerCase().includes(searchTerm.toLowerCase())
-  ); // Pagination
+    (category.name_ar || category.NameAr || '').toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  // Pagination
   const paginatedCategories = filteredCategories.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   const handleChangePage = (event, newPage) => {
@@ -180,20 +181,20 @@ export default function EpisodeCategories() {
               <TableBody>
                 {paginatedCategories.length > 0 ? (
                   paginatedCategories.map((category) => (
-                    <TableRow key={category.Id || category.id} hover>
+                    <TableRow key={category.id} hover>
                       <TableCell align="center">
-                        {category.Image && (
+                        {category.icon_url && (
                           <Box
                             component="img"
-                            src={category.Image}
-                            alt={category.NameAr || category.nameAr || category.name_ar}
+                            src={category.icon_url}
+                            alt={category.name_ar}
                             sx={{ width: 50, height: 50, borderRadius: 1, objectFit: 'cover' }}
                           />
                         )}
                       </TableCell>
-                      <TableCell>{category.NameAr || category.nameAr || category.name_ar}</TableCell>
+                      <TableCell>{category.name_ar}</TableCell>
                       <TableCell sx={{ maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {category.DescriptionAr || category.descriptionAr || category.description_ar}
+                        {category.description_ar}
                       </TableCell>
                       <TableCell align="center">
                         <Stack direction="row" spacing={0.5} justifyContent="center">
@@ -238,8 +239,8 @@ export default function EpisodeCategories() {
       </Grid>
 
       {/* Form Dialog */}
-      <Dialog open={formDialogOpen} onClose={() => setFormDialogOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{selectedCategory?.Id || selectedCategory?.id ? 'تحرير التصنيف' : 'إضافة تصنيف جديد'}</DialogTitle>
+      <Dialog open={formDialogOpen} onClose={() => setFormDialogOpen(false)} maxWidth="md" fullWidth>
+        <DialogTitle>{selectedCategory?.id ? 'تحرير التصنيف' : 'إضافة تصنيف جديد'}</DialogTitle>
         <DialogContent sx={{ pt: 2 }}>
           <CategoryForm
             category={selectedCategory}
@@ -255,8 +256,7 @@ export default function EpisodeCategories() {
         <DialogTitle>تأكيد الحذف</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            هل تريد بالتأكيد حذف التصنيف "{selectedCategory?.NameAr || selectedCategory?.nameAr || selectedCategory?.name_ar}"؟ لا يمكن
-            التراجع عن هذا الإجراء.
+          هل تريد بالتأكيد حذف التصنيف "{selectedCategory?.name_ar}"؟ لا يمكن التراجع عن هذا الإجراء.
           </DialogContentText>
         </DialogContent>
         <DialogActions>

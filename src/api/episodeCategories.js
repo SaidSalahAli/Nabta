@@ -10,14 +10,28 @@ import { mapCategories, mapCategory } from 'utils/dataMapper';
 // ==============================|| API - EPISODE CATEGORIES ||============================== //
 
 const endpoints = {
-  key: 'api/EpisodeCategory/List',
-  list: 'api/EpisodeCategory/List',
-  create: 'api/EpisodeCategory/Add',
-  read: (id) => `api/EpisodeCategory/List?id=${id}`,
-  update: (id) => `api/EpisodeCategory/Update/${id}`,
-  delete: (id) => `api/EpisodeCategory/Delete/${id}`,
-  search: (name) => `api/EpisodeCategory/Search?name=${name}`
+  key: 'v1/categories',
+  list: 'v1/categories',
+  create: 'v1/admin/categories',
+  read: (id) => `v1/categories/${id}`,
+  update: (id) => `v1/admin/categories/${id}`,
+  delete: (id) => `v1/admin/categories/${id}`,
+  search: (name) => `v1/categories/search?name=${name}`
 };
+
+// Convert form values to API snake_case format
+const convertToApiFormat = (formData) => ({
+  name_ar: formData.name_ar || formData.nameAr || formData.NameAr || '',
+  name_en: formData.name_en || formData.nameEn || formData.NameEn || '',
+  description_ar: formData.description_ar || formData.descriptionAr || formData.DescriptionAr || '',
+  description_en: formData.description_en || formData.descriptionEn || formData.DescriptionEn || '',
+  icon_url: formData.icon_url || formData.iconUrl || formData.IconUrl || formData.image || formData.Image || '',
+  cover_image: formData.cover_image || formData.coverImage || formData.CoverImage || '',
+  color_code: formData.color_code || formData.colorCode || formData.ColorCode || '',
+  display_order: formData.display_order ?? formData.displayOrder ?? formData.DisplayOrder ?? 0,
+  is_active: formData.is_active !== undefined ? Boolean(formData.is_active) : true,
+  type: formData.type || 'episodes'
+});
 
 // Get all categories
 export function useGetEpisodeCategories(params = {}) {
@@ -74,7 +88,8 @@ export function useGetEpisodeCategory(id) {
 // Create category
 export async function createEpisodeCategory(categoryData) {
   try {
-    const response = await axiosServices.post(endpoints.create, categoryData);
+    const apiData = convertToApiFormat(categoryData);
+    const response = await axiosServices.post(endpoints.create, apiData);
     mutate(endpoints.key);
     return response.data;
   } catch (error) {
@@ -85,7 +100,8 @@ export async function createEpisodeCategory(categoryData) {
 // Update category
 export async function updateEpisodeCategory(id, categoryData) {
   try {
-    const response = await axiosServices.put(endpoints.update(id), categoryData);
+    const apiData = convertToApiFormat(categoryData);
+    const response = await axiosServices.put(endpoints.update(id), apiData);
     mutate(endpoints.key);
     mutate(endpoints.read(id));
     return response.data;

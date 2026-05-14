@@ -17,6 +17,7 @@ class Category extends BaseModel
         'description_ar',
         'description_en',
         'icon_url',
+        'cover_image',
         'color_code',
         'display_order',
         'is_active',

@@ -24,14 +24,16 @@ export default function EditEpisode() {
   const handleSubmit = async (values) => {
     setIsLoading(true);
     try {
-      await updateEpisode({ ...values, ID: id });
+      await updateEpisode(id, values);
       openSnackbar({
         open: true,
         message: 'تم تحديث الحلقة بنجاح',
         variant: 'alert',
         alert: { color: 'success' }
       });
-      navigate('/episodes');
+      setTimeout(() => {
+        navigate('/dashboard/episodes');
+      }, 1500);
     } catch (error) {
       openSnackbar({
         open: true,
@@ -45,7 +47,7 @@ export default function EditEpisode() {
   };
 
   const handleCancel = () => {
-    navigate('/episodes');
+    navigate('/dashboard/episodes');
   };
 
   if (episodeLoading) {

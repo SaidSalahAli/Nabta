@@ -22,66 +22,92 @@ import * as Yup from 'yup';
 import AnimateButton from 'components/@extended/AnimateButton';
 import { openSnackbar } from 'api/snackbar';
 import { useGetEpisodeCategories } from 'api/episodeCategories';
+import { uploadMedia } from 'api/media';
+
+// assets
+import { DirectUp, Trash } from 'iconsax-react';
 
 // ==============================|| EPISODE FORM ||============================== //
 
 const validationSchema = Yup.object().shape({
-  title_ar: Yup.string().required('عنوان الحلقة مطلوب'),
-  slug: Yup.string().required('الرابط النصي مطلوب'),
+  title_ar: Yup.string().required('عنوان الحلقة (العربية) مطلوب'),
+  title_en: Yup.string().required('عنوان الحلقة (الإنجليزية) مطلوب'),
   category_id: Yup.number().required('التصنيف مطلوب'),
-  episode_number: Yup.number().required('رقم الحلقة مطلوب').positive('يجب أن يكون رقم موجب'),
-  short_description_ar: Yup.string().required('الوصف القصير مطلوب'),
-  description_ar: Yup.string().required('الوصف كامل مطلوب'),
-  video_url: Yup.string().required('رابط الفيديو مطلوب').url('رابط الفيديو غير صحيح'),
-  video_type: Yup.string().required('نوع الفيديو مطلوب'),
-  duration_seconds: Yup.number().required('المدة بالثواني مطلوبة').positive('يجب أن تكون قيمة موجبة'),
-  thumbnail_image: Yup.string(),
-  cover_image: Yup.string(),
+  episode_number: Yup.number().nullable(),
+  short_description_ar: Yup.string(),
+  short_description_en: Yup.string(),
+  description_ar: Yup.string(),
+  description_en: Yup.string(),
   transcript_ar: Yup.string(),
+  transcript_en: Yup.string(),
+  video_url: Yup.string().required('رابط الفيديو مطلوب').url('رابط الفيديو غير صحيح'),
+  video_type: Yup.string().oneOf(['youtube', 'vimeo', 'mp4', 'stream']),
+  duration_seconds: Yup.number().nullable(),
+  cover_image: Yup.string().required('صورة الغلاف مطلوبة'),
+  thumbnail_image: Yup.string(),
+  author: Yup.string(),
+  sort_order: Yup.number(),
+  has_worksheets: Yup.boolean(),
   is_featured: Yup.boolean(),
   is_published: Yup.boolean(),
-  has_worksheets: Yup.boolean(),
-  sort_order: Yup.number().min(0, 'يجب أن تكون قيمة موجبة'),
-  published_at: Yup.date()
+  published_at: Yup.date().nullable(),
+  seo_title: Yup.string(),
+  seo_description: Yup.string(),
+  seo_keywords: Yup.string(),
+  series_id: Yup.number().nullable()
 });
 
 export default function EpisodeForm({ episode = null, onSubmit, isLoading = false, onCancel }) {
   const { categories = [] } = useGetEpisodeCategories();
+  const [isUploadingCover, setIsUploadingCover] = useState(false);
+  const [isUploadingThumb, setIsUploadingThumb] = useState(false);
+
   const [initialValues, setInitialValues] = useState({
     title_ar: '',
-    slug: '',
+    title_en: '',
     category_id: '',
     episode_number: '',
     short_description_ar: '',
+    short_description_en: '',
     description_ar: '',
+    description_en: '',
+    transcript_ar: '',
+    transcript_en: '',
     video_url: '',
     video_type: 'youtube',
     duration_seconds: '',
-    thumbnail_image: '',
     cover_image: '',
-    transcript_ar: '',
+    thumbnail_image: '',
+    author: '',
+    sort_order: 0,
     is_featured: false,
     is_published: false,
     has_worksheets: false,
-    sort_order: 0,
-    published_at: ''
+    published_at: '',
+    seo_title: '',
+    seo_description: '',
+    seo_keywords: '',
+    series_id: ''
   });
 
   useEffect(() => {
     if (episode) {
       setInitialValues({
         title_ar: episode.title_ar || '',
-        slug: episode.slug || '',
+        title_en: episode.title_en || '',
         category_id: episode.category_id || '',
         episode_number: episode.episode_number || '',
         short_description_ar: episode.short_description_ar || '',
+        short_description_en: episode.short_description_en || '',
         description_ar: episode.description_ar || '',
+        description_en: episode.description_en || '',
         video_url: episode.video_url || '',
         video_type: episode.video_type || 'youtube',
         duration_seconds: episode.duration_seconds || '',
         thumbnail_image: episode.thumbnail_image || '',
         cover_image: episode.cover_image || '',
         transcript_ar: episode.transcript_ar || '',
+        transcript_en: episode.transcript_en || '',
         is_featured: episode.is_featured || false,
         is_published: episode.is_published || false,
         has_worksheets: episode.has_worksheets || false,
@@ -123,15 +149,45 @@ export default function EpisodeForm({ episode = null, onSubmit, isLoading = fals
     }
   };
 
+  const handleFileUpload = async (e, field, setFieldValue, setUploading) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const response = await uploadMedia(file);
+      if (response.success) {
+        // Construct full URL if needed, but the API returns the path starting with /uploads
+        const fileUrl = response.data.file_path;
+        setFieldValue(field, fileUrl);
+        openSnackbar({
+          open: true,
+          message: 'تم رفع الملف بنجاح',
+          variant: 'alert',
+          alert: { color: 'success' }
+        });
+      }
+    } catch (error) {
+      openSnackbar({
+        open: true,
+        message: error.message || 'فشل رفع الملف',
+        variant: 'alert',
+        alert: { color: 'error' }
+      });
+    } finally {
+      setUploading(false);
+    }
+  };
+
   return (
     <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleFormSubmit} enableReinitialize>
       {({ errors, handleBlur, handleChange, handleSubmit, touched, values, setFieldValue }) => (
         <form onSubmit={handleSubmit}>
           <Grid container spacing={3}>
-            {/* Title */}
+            {/* Title AR */}
             <Grid size={{ xs: 12, md: 6 }}>
               <Stack spacing={1}>
-                <InputLabel htmlFor="title_ar">عنوان الحلقة</InputLabel>
+                <InputLabel htmlFor="title_ar">عنوان الحلقة (العربية) *</InputLabel>
                 <OutlinedInput
                   id="title_ar"
                   type="text"
@@ -139,7 +195,7 @@ export default function EpisodeForm({ episode = null, onSubmit, isLoading = fals
                   name="title_ar"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  placeholder="أدخل عنوان الحلقة"
+                  placeholder="أدخل عنوان الحلقة بالعربية"
                   fullWidth
                   error={Boolean(touched.title_ar && errors.title_ar)}
                 />
@@ -151,24 +207,24 @@ export default function EpisodeForm({ episode = null, onSubmit, isLoading = fals
               </Stack>
             </Grid>
 
-            {/* Slug */}
+            {/* Title EN */}
             <Grid size={{ xs: 12, md: 6 }}>
               <Stack spacing={1}>
-                <InputLabel htmlFor="slug">الرابط النصي</InputLabel>
+                <InputLabel htmlFor="title_en">عنوان الحلقة (الإنجليزية) *</InputLabel>
                 <OutlinedInput
-                  id="slug"
+                  id="title_en"
                   type="text"
-                  value={values.slug}
-                  name="slug"
+                  value={values.title_en}
+                  name="title_en"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  placeholder="مثال: episode-1"
+                  placeholder="Enter episode title in English"
                   fullWidth
-                  error={Boolean(touched.slug && errors.slug)}
+                  error={Boolean(touched.title_en && errors.title_en)}
                 />
-                {touched.slug && errors.slug && (
-                  <FormHelperText error id="helper-text-slug">
-                    {errors.slug}
+                {touched.title_en && errors.title_en && (
+                  <FormHelperText error id="helper-text-title_en">
+                    {errors.title_en}
                   </FormHelperText>
                 )}
               </Stack>
@@ -177,7 +233,7 @@ export default function EpisodeForm({ episode = null, onSubmit, isLoading = fals
             {/* Category */}
             <Grid size={{ xs: 12, md: 6 }}>
               <Stack spacing={1}>
-                <InputLabel htmlFor="category_id">التصنيف</InputLabel>
+                <InputLabel htmlFor="category_id">التصنيف *</InputLabel>
                 <TextField
                   id="category_id"
                   select
@@ -206,7 +262,7 @@ export default function EpisodeForm({ episode = null, onSubmit, isLoading = fals
             {/* Episode Number */}
             <Grid size={{ xs: 12, md: 6 }}>
               <Stack spacing={1}>
-                <InputLabel htmlFor="episode_number">رقم الحلقة</InputLabel>
+                <InputLabel htmlFor="episode_number">رقم الحلقة *</InputLabel>
                 <OutlinedInput
                   id="episode_number"
                   type="number"
@@ -226,10 +282,10 @@ export default function EpisodeForm({ episode = null, onSubmit, isLoading = fals
               </Stack>
             </Grid>
 
-            {/* Short Description */}
-            <Grid size={{ xs: 12 }}>
+            {/* Short Description AR */}
+            <Grid size={{ xs: 12, md: 6 }}>
               <Stack spacing={1}>
-                <InputLabel htmlFor="short_description_ar">الوصف القصير</InputLabel>
+                <InputLabel htmlFor="short_description_ar">الوصف القصير (العربية) *</InputLabel>
                 <OutlinedInput
                   id="short_description_ar"
                   type="text"
@@ -237,7 +293,7 @@ export default function EpisodeForm({ episode = null, onSubmit, isLoading = fals
                   name="short_description_ar"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  placeholder="وصف قصير للحلقة"
+                  placeholder="وصف قصير بالعربية"
                   fullWidth
                   multiline
                   rows={2}
@@ -251,10 +307,35 @@ export default function EpisodeForm({ episode = null, onSubmit, isLoading = fals
               </Stack>
             </Grid>
 
-            {/* Full Description */}
-            <Grid size={{ xs: 12 }}>
+            {/* Short Description EN */}
+            <Grid size={{ xs: 12, md: 6 }}>
               <Stack spacing={1}>
-                <InputLabel htmlFor="description_ar">الوصف كامل</InputLabel>
+                <InputLabel htmlFor="short_description_en">الوصف القصير (الإنجليزية) *</InputLabel>
+                <OutlinedInput
+                  id="short_description_en"
+                  type="text"
+                  value={values.short_description_en}
+                  name="short_description_en"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  placeholder="Brief description in English"
+                  fullWidth
+                  multiline
+                  rows={2}
+                  error={Boolean(touched.short_description_en && errors.short_description_en)}
+                />
+                {touched.short_description_en && errors.short_description_en && (
+                  <FormHelperText error id="helper-text-short_description_en">
+                    {errors.short_description_en}
+                  </FormHelperText>
+                )}
+              </Stack>
+            </Grid>
+
+            {/* Full Description AR */}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Stack spacing={1}>
+                <InputLabel htmlFor="description_ar">الوصف الكامل (العربية) *</InputLabel>
                 <OutlinedInput
                   id="description_ar"
                   type="text"
@@ -262,7 +343,7 @@ export default function EpisodeForm({ episode = null, onSubmit, isLoading = fals
                   name="description_ar"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  placeholder="وصف كامل للحلقة"
+                  placeholder="وصف كامل بالعربية"
                   fullWidth
                   multiline
                   rows={4}
@@ -271,6 +352,31 @@ export default function EpisodeForm({ episode = null, onSubmit, isLoading = fals
                 {touched.description_ar && errors.description_ar && (
                   <FormHelperText error id="helper-text-description_ar">
                     {errors.description_ar}
+                  </FormHelperText>
+                )}
+              </Stack>
+            </Grid>
+
+            {/* Full Description EN */}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Stack spacing={1}>
+                <InputLabel htmlFor="description_en">الوصف الكامل (الإنجليزية) *</InputLabel>
+                <OutlinedInput
+                  id="description_en"
+                  type="text"
+                  value={values.description_en}
+                  name="description_en"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  placeholder="Full description in English"
+                  fullWidth
+                  multiline
+                  rows={4}
+                  error={Boolean(touched.description_en && errors.description_en)}
+                />
+                {touched.description_en && errors.description_en && (
+                  <FormHelperText error id="helper-text-description_en">
+                    {errors.description_en}
                   </FormHelperText>
                 )}
               </Stack>
@@ -366,44 +472,41 @@ export default function EpisodeForm({ episode = null, onSubmit, isLoading = fals
               </Stack>
             </Grid>
 
-            {/* Thumbnail Image URL */}
+            {/* Cover Image URL - REQUIRED */}
             <Grid size={{ xs: 12, md: 6 }}>
               <Stack spacing={1}>
-                <InputLabel htmlFor="thumbnail_image">رابط الصورة المصغرة</InputLabel>
-                <OutlinedInput
-                  id="thumbnail_image"
-                  type="url"
-                  value={values.thumbnail_image}
-                  name="thumbnail_image"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  placeholder="https://..."
-                  fullWidth
-                  error={Boolean(touched.thumbnail_image && errors.thumbnail_image)}
-                />
-                {touched.thumbnail_image && errors.thumbnail_image && (
-                  <FormHelperText error id="helper-text-thumbnail_image">
-                    {errors.thumbnail_image}
-                  </FormHelperText>
-                )}
-              </Stack>
-            </Grid>
-
-            {/* Cover Image URL */}
-            <Grid size={{ xs: 12, md: 6 }}>
-              <Stack spacing={1}>
-                <InputLabel htmlFor="cover_image">رابط صورة الغلاف</InputLabel>
-                <OutlinedInput
-                  id="cover_image"
-                  type="url"
-                  value={values.cover_image}
-                  name="cover_image"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  placeholder="https://..."
-                  fullWidth
-                  error={Boolean(touched.cover_image && errors.cover_image)}
-                />
+                <InputLabel htmlFor="cover_image">صورة الغلاف (مطلوب) *</InputLabel>
+                <Stack direction="row" spacing={2} alignItems="center">
+                  {values.cover_image && (
+                    <Box sx={{ position: 'relative', width: 100, height: 60 }}>
+                      <Box
+                        component="img"
+                        src={values.cover_image.startsWith('http') ? values.cover_image : `${import.meta.env.VITE_APP_API_URL}${values.cover_image}`}
+                        alt="cover"
+                        sx={{ width: '100%', height: '100%', borderRadius: 1, objectFit: 'cover' }}
+                      />
+                      <Button
+                        size="small"
+                        color="error"
+                        variant="contained"
+                        sx={{ position: 'absolute', top: -10, right: -10, minWidth: 24, width: 24, height: 24, p: 0, borderRadius: '50%' }}
+                        onClick={() => setFieldValue('cover_image', '')}
+                      >
+                        <Trash size="12" variant="Bold" />
+                      </Button>
+                    </Box>
+                  )}
+                  <Button
+                    variant="outlined"
+                    component="label"
+                    startIcon={<DirectUp size="20" />}
+                    disabled={isUploadingCover}
+                    sx={{ height: 40 }}
+                  >
+                    {isUploadingCover ? 'جاري الرفع...' : 'رفع صورة'}
+                    <input type="file" hidden accept="image/*" onChange={(e) => handleFileUpload(e, 'cover_image', setFieldValue, setIsUploadingCover)} />
+                  </Button>
+                </Stack>
                 {touched.cover_image && errors.cover_image && (
                   <FormHelperText error id="helper-text-cover_image">
                     {errors.cover_image}
@@ -412,10 +515,53 @@ export default function EpisodeForm({ episode = null, onSubmit, isLoading = fals
               </Stack>
             </Grid>
 
-            {/* Transcript */}
-            <Grid size={{ xs: 12 }}>
+            {/* Thumbnail Image URL */}
+            <Grid size={{ xs: 12, md: 6 }}>
               <Stack spacing={1}>
-                <InputLabel htmlFor="transcript_ar">نص الحلقة</InputLabel>
+                <InputLabel htmlFor="thumbnail_image">الصورة المصغرة</InputLabel>
+                <Stack direction="row" spacing={2} alignItems="center">
+                  {values.thumbnail_image && (
+                    <Box sx={{ position: 'relative', width: 60, height: 60 }}>
+                      <Box
+                        component="img"
+                        src={values.thumbnail_image.startsWith('http') ? values.thumbnail_image : `${import.meta.env.VITE_APP_API_URL}${values.thumbnail_image}`}
+                        alt="thumbnail"
+                        sx={{ width: '100%', height: '100%', borderRadius: 1, objectFit: 'cover' }}
+                      />
+                      <Button
+                        size="small"
+                        color="error"
+                        variant="contained"
+                        sx={{ position: 'absolute', top: -10, right: -10, minWidth: 24, width: 24, height: 24, p: 0, borderRadius: '50%' }}
+                        onClick={() => setFieldValue('thumbnail_image', '')}
+                      >
+                        <Trash size="12" variant="Bold" />
+                      </Button>
+                    </Box>
+                  )}
+                  <Button
+                    variant="outlined"
+                    component="label"
+                    startIcon={<DirectUp size="20" />}
+                    disabled={isUploadingThumb}
+                    sx={{ height: 40 }}
+                  >
+                    {isUploadingThumb ? 'جاري الرفع...' : 'رفع صورة'}
+                    <input type="file" hidden accept="image/*" onChange={(e) => handleFileUpload(e, 'thumbnail_image', setFieldValue, setIsUploadingThumb)} />
+                  </Button>
+                </Stack>
+                {touched.thumbnail_image && errors.thumbnail_image && (
+                  <FormHelperText error id="helper-text-thumbnail_image">
+                    {errors.thumbnail_image}
+                  </FormHelperText>
+                )}
+              </Stack>
+            </Grid>
+
+            {/* Transcript AR */}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Stack spacing={1}>
+                <InputLabel htmlFor="transcript_ar">نص الحلقة (العربية)</InputLabel>
                 <OutlinedInput
                   id="transcript_ar"
                   type="text"
@@ -423,11 +569,31 @@ export default function EpisodeForm({ episode = null, onSubmit, isLoading = fals
                   name="transcript_ar"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  placeholder="نص الحلقة كاملاً"
+                  placeholder="نص الحلقة الكامل بالعربية"
                   fullWidth
                   multiline
-                  rows={4}
+                  rows={3}
                   error={Boolean(touched.transcript_ar && errors.transcript_ar)}
+                />
+              </Stack>
+            </Grid>
+
+            {/* Transcript EN */}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Stack spacing={1}>
+                <InputLabel htmlFor="transcript_en">نص الحلقة (الإنجليزية)</InputLabel>
+                <OutlinedInput
+                  id="transcript_en"
+                  type="text"
+                  value={values.transcript_en}
+                  name="transcript_en"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  placeholder="Episode transcript in English"
+                  fullWidth
+                  multiline
+                  rows={3}
+                  error={Boolean(touched.transcript_en && errors.transcript_en)}
                 />
               </Stack>
             </Grid>
