@@ -6,6 +6,8 @@ use Nabta\Models\Episode;
 
 /**
  * Episode Repository
+ *
+ * @extends BaseRepository<Episode>
  */
 class EpisodeRepository extends BaseRepository
 {
@@ -14,78 +16,57 @@ class EpisodeRepository extends BaseRepository
         parent::__construct(new Episode());
     }
 
-    /**
-     * Get by category
-     */
     public function getByCategory(int $categoryId, int $page = 1, int $perPage = 15): array
     {
-        $offset = ($page - 1) * $perPage;
+        $offset   = ($page - 1) * $perPage;
         $episodes = $this->model->getByCategory($categoryId, $perPage, $offset);
-        
+
         return [
-            'data' => $episodes,
+            'data'       => $episodes,
             'pagination' => [
                 'current_page' => $page,
-                'per_page' => $perPage,
-                'total_items' => count($episodes),
-            ]
+                'per_page'     => $perPage,
+                'total_items'  => count($episodes),
+            ],
         ];
     }
 
-    /**
-     * Get featured
-     */
     public function getFeatured(int $limit = 10): array
     {
         return $this->model->getFeatured($limit);
     }
 
-    /**
-     * Get series episodes
-     */
     public function getSeriesEpisodes(int $seriesId): array
     {
         return $this->model->getSeriesEpisodes($seriesId);
     }
 
-    /**
-     * Increment views
-     */
     public function incrementViews(int $episodeId): bool
     {
         return $this->model->incrementViews($episodeId);
     }
 
-    /**
-     * Get related
-     */
     public function getRelated(int $episodeId, int $limit = 5): array
     {
         return $this->model->getRelated($episodeId, $limit);
     }
 
-    /**
-     * Search
-     */
-    public function search(string $query, int $page = 1, int $perPage = 15): array
+public function searchEpisodes(string $query, int $page = 1, int $perPage = 15): array
     {
-        $offset = ($page - 1) * $perPage;
+        $offset   = ($page - 1) * $perPage;
         $episodes = $this->model->searchEpisodes($query, $perPage, $offset);
-        
+
         return [
-            'data' => $episodes,
+            'data'       => $episodes,
             'pagination' => [
                 'current_page' => $page,
-                'per_page' => $perPage,
-                'total_items' => count($episodes),
-            ]
+                'per_page'     => $perPage,
+                'total_items'  => count($episodes),
+            ],
         ];
     }
 
-    /**
-     * Get with category
-     */
-    public function withCategory()
+    public function withCategory(): array
     {
         return $this->model->withCategory();
     }

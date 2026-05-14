@@ -77,7 +77,8 @@ class AuthController extends BaseController
         if ($result['success']) {
             $this->success([
                 'user' => $result['data'],
-                'token' => $result['token']
+                'accessToken' => $result['token'],
+                'refreshToken' => $result['refreshToken']
             ], $result['message']);
         } else {
             $this->error($result['message'], null, 401);
@@ -196,7 +197,40 @@ class AuthController extends BaseController
             $this->methodNotAllowed();
         }
 
-        // In production, implement token blacklisting
-        $this->success(null, 'Logged out successfully');
+        $token = $this->getTokenFromHeaders();
+        
+        if ($token && $this->authService->logout($token)) {
+            $this->success(null, 'Logged out successfully');
+        } else {
+            $this->error('Logout failed', null, 400);
+        }
+    }
+
+    /**
+     * Refresh access token
+     * POST /api/v1/auth/refresh
+     */
+    public function refresh(): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->methodNotAllowed();
+        }
+
+        $refreshToken = $this->input('refreshToken');
+        
+        if (!$refreshToken) {
+            $this->error('Refresh token is required', null, 422);
+        }
+
+        $result = $this->authService->refreshToken($refreshToken);
+        
+        if ($result) {
+            $this->success([
+                'user' => $result['user'],
+                'accessToken' => $result['token']
+            ], 'Token refreshed successfully');
+        } else {
+            $this->error('Invalid or expired refresh token', null, 401);
+        }
     }
 }

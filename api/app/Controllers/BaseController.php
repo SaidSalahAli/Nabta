@@ -198,6 +198,14 @@ abstract class BaseController
     }
 
     /**
+     * Get token from headers (alias for getBearerToken)
+     */
+    protected function getTokenFromHeaders(): ?string
+    {
+        return $this->getBearerToken();
+    }
+
+    /**
      * Send success response
      */
     protected function success($data = null, string $message = 'Success', int $statusCode = 200): void

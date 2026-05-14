@@ -515,6 +515,43 @@ CREATE TABLE IF NOT EXISTS `donations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
+-- TOKEN MANAGEMENT
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS `refresh_tokens` (
+    `id` INT PRIMARY KEY AUTO_INCREMENT,
+    `user_id` INT NOT NULL,
+    `token` VARCHAR(500) NOT NULL UNIQUE,
+    `ip_address` VARCHAR(45),
+    `user_agent` TEXT,
+    `expires_at` TIMESTAMP NOT NULL,
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
+    INDEX `idx_user_id` (`user_id`),
+    INDEX `idx_expires_at` (`expires_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `token_blacklist` (
+    `id` INT PRIMARY KEY AUTO_INCREMENT,
+    `token` VARCHAR(500) NOT NULL UNIQUE,
+    `user_id` INT,
+    `blacklisted_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `expires_at` TIMESTAMP NOT NULL,
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE SET NULL,
+    INDEX `idx_expires_at` (`expires_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `failed_login_attempts` (
+    `id` INT PRIMARY KEY AUTO_INCREMENT,
+    `email` VARCHAR(255),
+    `ip_address` VARCHAR(45) NOT NULL,
+    `attempts` INT DEFAULT 1,
+    `last_attempt_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `locked_until` TIMESTAMP NULL,
+    UNIQUE KEY `unique_email_ip` (`email`, `ip_address`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================================
 -- SEEDS & DEFAULT DATA
 -- ============================================================
 

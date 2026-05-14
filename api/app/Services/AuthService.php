@@ -11,10 +11,12 @@ use Nabta\Helpers;
 class AuthService
 {
     private User $userModel;
+    private JWTManager $jwtManager;
 
     public function __construct()
     {
         $this->userModel = new User();
+        $this->jwtManager = new JWTManager();
     }
 
     /**
@@ -54,11 +56,23 @@ class AuthService
         $user = $this->userModel->find($userId);
         unset($user['password']);
 
+        $clientIp = $this->getUserIpAddress();
+        $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+
         return [
             'success' => true,
             'message' => 'User registered successfully',
             'data' => $user,
-            'token' => $this->generateToken($userId)
+            'token' => $this->jwtManager->generateAccessToken($userId, [
+                'email' => $user['email'],
+                'name' => $user['name'],
+                'role' => 'user'
+            ]),
+            'refreshToken' => $this->jwtManager->generateRefreshToken(
+                $userId,
+                $clientIp,
+                $userAgent
+            )
         ];
     }
 
@@ -91,11 +105,23 @@ class AuthService
 
         unset($user['password']);
 
+        $clientIp = $this->getUserIpAddress();
+        $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+
         return [
             'success' => true,
             'message' => 'Login successful',
             'data' => $user,
-            'token' => $this->generateToken($user['id'])
+            'token' => $this->jwtManager->generateAccessToken($user['id'], [
+                'email' => $user['email'],
+                'name' => $user['name'],
+                'role' => $user['role'] ?? 'user'
+            ]),
+            'refreshToken' => $this->jwtManager->generateRefreshToken(
+                $user['id'],
+                $clientIp,
+                $userAgent
+            )
         ];
     }
 
@@ -203,5 +229,60 @@ class AuthService
             'message' => 'Failed to change password',
             'errors' => null
         ];
+    }
+
+    /**
+     * Get user IP address
+     */
+    private function getUserIpAddress(): string
+    {
+        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+            return $_SERVER['HTTP_CLIENT_IP'];
+        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+            return trim($ips[0]);
+        } else {
+            return $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
+        }
+    }
+
+    /**
+     * Logout (token invalidation)
+     */
+    public function logout(string $token): bool
+    {
+        return $this->jwtManager->blacklistToken($token);
+    }
+
+    /**
+     * Refresh access token
+     */
+    public function refreshToken(string $refreshToken): ?array
+    {
+        try {
+            $decoded = $this->jwtManager->decodeToken($refreshToken);
+            if (!$decoded || ($decoded['type'] ?? null) !== 'refresh') {
+                return null;
+            }
+
+            $user = $this->userModel->find($decoded['sub']);
+            if (!$user) {
+                return null;
+            }
+
+            $newAccessToken = $this->jwtManager->generateAccessToken($user['id'], [
+                'email' => $user['email'],
+                'name' => $user['name'],
+                'role' => $user['role'] ?? 'user'
+            ]);
+
+            return [
+                'token' => $newAccessToken,
+                'user' => $user
+            ];
+        } catch (\Exception $e) {
+            error_log('Token Refresh Error: ' . $e->getMessage());
+            return null;
+        }
     }
 }

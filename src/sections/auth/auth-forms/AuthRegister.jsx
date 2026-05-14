@@ -85,7 +85,7 @@ export default function AuthRegister() {
               variant: 'alert',
               alert: { color: 'success' }
             });
-            setTimeout(() => navigate('/login', { replace: true }), 1500);
+            setTimeout(() => navigate('/auth/login', { replace: true }), 1500);
           }
         } catch (err) {
           console.error(err.errors.Mobail);

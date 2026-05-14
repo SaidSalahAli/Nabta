@@ -22,14 +22,13 @@ class Config
         }
 
         $envPath = $path ?? dirname(__DIR__);
-        
+
         if (file_exists($envPath . '/.env')) {
             try {
-                $dotenv = \Dotenv\Dotenv::createImmutable($envPath);
+                $dotenv = Dotenv::createImmutable($envPath);
                 $dotenv->load();
             } catch (\Exception $e) {
-                // Handle missing dotenv gracefully
-                logError('Failed to load .env file: ' . $e->getMessage());
+                error_log('Failed to load .env file: ' . $e->getMessage());
             }
         }
 
@@ -39,7 +38,7 @@ class Config
     /**
      * Get configuration value
      */
-    public static function get(string $key, $default = null)
+    public static function get(string $key, mixed $default = null): mixed
     {
         self::load();
         return getenv($key) ?: $default;
@@ -66,7 +65,7 @@ class Config
     /**
      * Set configuration value
      */
-    public static function set(string $key, $value): void
+    public static function set(string $key, mixed $value): void
     {
         $_ENV[$key] = $value;
         putenv($key . '=' . $value);

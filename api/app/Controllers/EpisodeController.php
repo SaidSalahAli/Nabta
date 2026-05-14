@@ -30,8 +30,8 @@ class EpisodeController extends BaseController
         $pagination = $this->getPagination();
         $result = $this->episodeService->getAll($pagination['page'], $pagination['per_page']);
 
-        $this->success($result['data'], null, 200);
-    }
+$this->success($result['data'], '', 200);  
+  }
 
     /**
      * Get featured episodes

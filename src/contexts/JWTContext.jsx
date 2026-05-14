@@ -27,12 +27,16 @@ const verifyToken = (serviceToken) => {
   return decoded.exp > Date.now() / 1000;
 };
 
-const setSession = (serviceToken) => {
+const setSession = (serviceToken, refreshToken = null) => {
   if (serviceToken) {
     localStorage.setItem('serviceToken', serviceToken);
+    if (refreshToken) {
+      localStorage.setItem('refreshToken', refreshToken);
+    }
     axios.defaults.headers.common.Authorization = `Bearer ${serviceToken}`;
   } else {
     localStorage.removeItem('serviceToken');
+    localStorage.removeItem('refreshToken');
     delete axios.defaults.headers.common.Authorization;
   }
 };
@@ -42,11 +46,10 @@ const getUserFromToken = (token) => {
   try {
     const decoded = jwtDecode(token);
     return {
-      id: decoded.id || decoded.UserId,
-      email: decoded.email || decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'] || '',
-      firstName: decoded.firstName || '',
-      lastName: decoded.lastName || '',
-      role: decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || decoded.role || 'User'
+      id: decoded.id || decoded.sub || decoded.UserId,
+      email: decoded.email || '',
+      name: decoded.name || '',
+      role: decoded.role || 'user'
     };
   } catch {
     return null;
@@ -95,39 +98,67 @@ export const JWTProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    const response = await axios.post('api/AccountNabta/Login', { email, password });
-    const { accessToken, user } = response.data;
-    setSession(accessToken);
+    try {
+      const response = await axios.post('v1/auth/login', { email, password });
+      const { accessToken, refreshToken, user } = response.data.data;
 
-    const userFromToken = getUserFromToken(accessToken);
+      setSession(accessToken, refreshToken);
 
-    dispatch({
-      type: LOGIN,
-      payload: { isLoggedIn: true, user: userFromToken || user }
-    });
+      const userFromToken = getUserFromToken(accessToken);
+
+      dispatch({
+        type: LOGIN,
+        payload: { isLoggedIn: true, user: userFromToken || user }
+      });
+
+      return { success: true, user: userFromToken || user };
+    } catch (error) {
+      console.error('Login error:', error);
+      dispatch({ type: LOGOUT });
+      throw error;
+    }
   };
 
-  const register = async (email, password, firstName, lastName, mobile) => {
-    const payload = {
-      email,
-      password,
-      firstName,
-      lastName,
-      mobail: mobile || ''
-    };
+  const register = async (email, password, name) => {
+    try {
+      const payload = {
+        email,
+        password,
+        name
+      };
 
-    const response = await axios.post('api/AccountNabta/Rigester', payload);
+      const response = await axios.post('v1/auth/register', payload);
 
-    const data = response.data || response;
-    const serviceToken = data.accessToken || data.serviceToken || data.token;
-    if (serviceToken) setSession(serviceToken);
+      const { accessToken, refreshToken, user } = response.data.data;
+      if (accessToken) {
+        setSession(accessToken, refreshToken);
 
-    return data;
+        const userFromToken = getUserFromToken(accessToken);
+        dispatch({
+          type: LOGIN,
+          payload: { isLoggedIn: true, user: userFromToken || user }
+        });
+      }
+
+      return response.data;
+    } catch (error) {
+      console.error('Registration error:', error);
+      throw error;
+    }
   };
 
-  const logout = () => {
-    setSession(null);
-    dispatch({ type: LOGOUT });
+  const logout = async () => {
+    try {
+      const token = localStorage.getItem('serviceToken');
+      if (token) {
+        await axios.post('v1/auth/logout');
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      setSession(null);
+      dispatch({ type: LOGOUT });
+    }
   };
 
   const resetPassword = async (email) => {

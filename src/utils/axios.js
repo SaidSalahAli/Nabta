@@ -1,8 +1,9 @@
 import axios from 'axios';
 
-const axiosServices = axios.create({ baseURL: import.meta.env.VITE_APP_API_URL || 'http://localhost:3010/' });
-
-// ==============================|| AXIOS - FOR MOCK SERVICES ||============================== //
+const axiosServices = axios.create({
+  baseURL: import.meta.env.VITE_APP_API_URL
+});
+// ==============================|| AXIOS - REQUEST INTERCEPTOR ||============================== //
 
 axiosServices.interceptors.request.use(
   async (config) => {
@@ -21,19 +22,43 @@ axiosServices.interceptors.request.use(
   }
 );
 
+// ==============================|| AXIOS - RESPONSE INTERCEPTOR ||============================== //
+
 axiosServices.interceptors.response.use(
   (response) => response,
-  (error) => {
-    if (error.response?.status === 401 && !window.location.href.includes('/auth/login')) {
-      window.location.pathname = '/maintenance/500';
-    }
-    if (error.response?.status === 302 || error.response?.status === 301) {
-      // Handle redirects - usually means auth is required
-      if (!window.location.href.includes('/auth/login')) {
-        window.location.pathname = '/auth/login';
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      const refreshToken = localStorage.getItem('refreshToken');
+
+      if (refreshToken) {
+        try {
+          const response = await axiosServices.post('/auth/refresh', {
+            refreshToken
+          });
+
+          const { accessToken } = response.data.data;
+
+          localStorage.setItem('serviceToken', accessToken);
+
+          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+
+          return axiosServices.request(originalRequest);
+        } catch (err) {
+          localStorage.removeItem('serviceToken');
+          localStorage.removeItem('refreshToken');
+
+          window.dispatchEvent(new Event('auth:logout'));
+
+          return Promise.reject(err);
+        }
       }
     }
-    return Promise.reject((error.response && error.response.data) || 'Wrong Services');
+
+    return Promise.reject(error);
   }
 );
 export default axiosServices;
